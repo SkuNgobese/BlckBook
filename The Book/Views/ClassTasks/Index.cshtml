@@ -1,0 +1,217 @@
+﻿@using The_Book.Models
+@using Microsoft.AspNet.Identity
+@using Microsoft.AspNet.Identity.EntityFramework;
+@{
+    string userId = User.Identity.GetUserId();
+    string role = "";
+    var init = "";
+    ApplicationDbContext context = new ApplicationDbContext();
+    var user = context.Users.Find(userId);
+    var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
+    var s = userManager.GetRoles(userId);
+    if (s[0].ToString() == "Teacher")
+    {
+        role = "Teacher";
+    }
+    if (s[0].ToString() == "Student")
+    {
+        role = "Student";
+    }
+    init = user.firstName.Substring(0, 1).ToUpper();
+    if (user.middleName != null)
+    {
+        init = user.firstName.Substring(0, 1).ToUpper() + user.middleName.Substring(0, 1).ToUpper();
+    }
+}
+<!DOCTYPE html>
+<html>
+<body class="sidebar-mini fixed">
+    <div class="wrapper">
+
+        <!-- Side-Nav-->
+        <aside class="main-sidebar hidden-print">
+            <section class="sidebar">
+                <div class="user-panel">
+                    <div class="pull-left image"><img class="img-circle" src="@Url.Action("UserPhoto","Home")" alt="User Image"></div>
+                    <div class="pull-left info">
+                        @if (s[0].ToString() == "Teacher")
+                        {
+                            <a href="~/Teachers/Details"><p> @init @user.lastName</p></a>
+                        }
+                        else if (s[0].ToString() == "Student")
+                        {
+                            <a href="~/Students/Details"><p> @init @user.lastName</p></a>
+                        }
+                        <p class="designation">@role</p>
+                    </div>
+                </div>
+                <!-- Sidebar Menu-->
+                <ul class="sidebar-menu">
+                    <li><a href="~/Home/Index"><i class="fa fa-dashboard"></i><span>Dashboard</span></a></li>
+                    @if (s[0].ToString() == "Teacher")
+                    {
+                        <li class="treeview">
+                            <a href="#"><i class="fa fa-laptop"></i><span>Data Management</span><i class="fa fa-angle-right"></i></a>
+                            <ul class="treeview-menu">
+                                <li><a href="~/Libraries/Create"><i class="fa fa-circle-o"></i>Add to Library</a></li>
+                                <li><a href="~/CASS/Index"><i class="fa fa-circle-o"></i>CASS</a></li>
+                            </ul>
+                        </li>
+                        <li class="treeview">
+                            <a href="#"><i class="fa fa-user-plus"></i><span>Users Management</span><i class="fa fa-angle-right"></i></a>
+                            <ul class="treeview-menu">
+                                <li><a href="~/Students/Activate"><i class="fa fa-circle-o"></i>Students</a></li>
+                            </ul>
+                        </li>
+                    }
+                    <li><a href="~/Libraries/Index"><i class="fa fa-institution"></i><span>Library</span></a></li>
+                    @if (s[0].ToString() == "Teacher")
+                    {
+                        <li><a href="~/ClassTasks/Create"><i class="fa fa-file-text-o"></i><span>Post Task</span></a></li>
+                    }
+                    <li class="active"><a href="~/ClassTasks/Index"><i class="fa fa-tasks"></i><span>Tasks</span></a></li>
+                    @if (s[0].ToString() != "Student")
+                    {
+                        <li class="treeview">
+                            <a href="#"><i class="fa fa-th-list"></i><span>Tables</span><i class="fa fa-angle-right"></i></a>
+                            <ul class="treeview-menu">
+                                @if (s[0].ToString() == "Teacher")
+                                {
+                                    <li><a href="~/Students/Index"><i class="fa fa-circle-o"></i> Students</a></li>
+                                }
+                            </ul>
+                        </li>
+                    }
+                    @if (s[0].ToString() == "Student")
+                    {
+                        <li><a href="~/CASS/Report"><i class="fa fa-th-list"></i><span>Cass Report</span></a></li>
+                    }
+                </ul>
+            </section>
+        </aside>
+        <div class="content-wrapper">
+            <div class="page-title">
+                <div>
+                    <h1><i class="fa fa-tasks"></i> Tasks</h1>
+                </div>
+                <div>
+                    <ul class="breadcrumb">
+                        <li><i class="fa fa-home fa-lg"></i></li>
+                        <li><a href="#">Tasks</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="row">
+                @if (((List<ClassTask>)TempData["classtasks"]).Any())
+                {
+                    foreach (var i in (List<ClassTask>)TempData["classtasks"])
+                    {
+                        var submtd = i.TaskSubmissions.ToList().Find(p => p.Student.Id == userId);
+                        var subj = (from x in i.Enrollment.EnrollmentSubjects
+                                    where x.Teacher == i.Teacher
+                                    select x).First();
+                        <div class="col-md-12">
+                            <div class="card">
+                                <h3 class="line-head" align="center"><i class="fa fa-file-text"></i> <b>@i.heading***</b></h3>
+                                    <div class="body">
+                                        @if (s[0].ToString() == "Student")
+                                        {
+                                            if (submtd == null)
+                                            {
+                                                if (i.submittingOption == "BlckBook" && (i.dueDate.Date > DateTime.Today) || (i.dueDate.Date == DateTime.Today && DateTime.Now.TimeOfDay < i.dueTime.TimeOfDay))
+                                                {
+                                                    <div align="right">
+                                                        <b>@Html.ActionLink("Submit", "Submit", new { id = i.Id }) <i class="fa fa-angle-double-right"></i></b>
+                                                    </div>
+                                                }
+                                                if (i.submittingOption == "BlckBook" && (DateTime.Today > i.dueDate.Date) || (i.dueDate.Date == DateTime.Today && DateTime.Now.TimeOfDay > i.dueTime.TimeOfDay))
+                                                {
+                                                    <div align="right">
+                                                        <i class="fa fa-exclamation-circle"></i> <b>*Overdue**</b>
+                                                    </div>
+                                                }
+                                                if (i.submittingOption == "Hand In" && DateTime.Today <= i.dueDate.Date)
+                                                {
+                                                    <div align="right">
+                                                        <i class="fa fa-paper-plane-o"></i> <b>Hand In to: <u><i>@i.Teacher.title @i.Teacher.ApplicationUser.lastName</i></u></b>
+                                                    </div>
+                                                }
+                                                if (i.submittingOption == "Hand In" && i.dueDate.Date < DateTime.Today)
+                                                {
+                                                    <div align="right">
+                                                        <b>*Due date Passed**</b>
+                                                    </div>
+                                                }
+                                                
+                                            }
+                                            else
+                                            {
+                                                <div align="right">
+                                                    <i class="fa fa-check-circle"></i> <b>Submitted**</b>
+                                                </div>
+                                            }
+                                        }
+                                        @if (s[0].ToString() == "Teacher")
+                                        {
+                                            if (i.submittingOption == "BlckBook")
+                                            {
+                                                <div align="right">
+                                                    <b>@Html.ActionLink("Submitted", "Submitted", new { id = i.Id }) <i class="fa fa-angle-double-right"></i></b>
+                                                </div>
+                                            }
+                                            else
+                                            {
+                                                <div align="right">
+                                                    <b>** <i class="fa fa-hand-peace-o"></i> **</b>
+                                                </div>
+                                            }
+                                            <p>
+                                                <label>Class: </label> @i.Enrollment.grade@i.Enrollment.group
+                                            </p>
+
+                                        }
+                                        <p>
+                                            <label>Subject: </label> @subj.name
+                                        </p>
+                                        <p>
+                                            <label>Due Date: </label> @i.dueDate.ToString("dd MMMM yyyy")
+                                        </p>
+                                        <p>
+                                            <label>Time: </label> @i.dueTime.ToString("hh:mm tt")
+                                        </p>
+                                        <br />
+                                        <p>
+                                            <i>@i.content</i>
+                                        </p>
+                                        <div class="card-footer">
+                                            @if (i.ClassTaskFile != null)
+                                            {
+                                                <p>
+                                                    <label>Attachment:</label>
+                                                    <ul class="attachment">
+                                                        <li>
+                                                            <a class="title" href="/ClassTasks/Download/?p=@(i.ClassTaskFile.Id+i.ClassTaskFile.FileName)&d=@i.ClassTaskFile.FileName">@i.ClassTaskFile.FileName</a>
+                                                        </li>
+                                                    </ul>
+                                                </p>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div align="center">
+                        <p>
+                            <h3><b>No Tasks have been posted yet.</b></h3>
+                        </p>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    <script src="~/js/jquery-2.1.4.min.js"></script>
+</body>
+</html>

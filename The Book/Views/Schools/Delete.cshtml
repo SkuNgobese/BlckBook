@@ -1,0 +1,81 @@
+﻿@model The_Book.Models.School
+
+@{
+    ViewBag.Title = "Delete";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>School</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.schoolPhoto)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.schoolPhoto)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.schoolAddress.province)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.schoolAddress.province)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.schoolAddress.street)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.schoolAddress.street)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.schoolAddress.suburb)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.schoolAddress.suburb)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.schoolAddress.city)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.schoolAddress.city)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.schoolAddress.code)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.schoolAddress.code)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    }
+</div>

@@ -1,0 +1,236 @@
+﻿@model The_Book.Models.Student
+@{
+    var role = "Student";
+    var init = Model.ApplicationUser.firstName.Substring(0, 1).ToUpper();
+    if (Model.ApplicationUser.middleName != null)
+    {
+        init = Model.ApplicationUser.firstName.Substring(0, 1).ToUpper() + Model.ApplicationUser.middleName.Substring(0, 1).ToUpper();
+    }
+}
+<!DOCTYPE html>
+<html>
+<body class="sidebar-mini fixed">
+    <div class="wrapper">
+        <aside class="main-sidebar hidden-print">
+            <section class="sidebar">
+                <div class="user-panel">
+                    <div class="pull-left image"><img class="img-circle" src="@Url.Action("UserPhoto","Home")" alt="User Image"></div>
+                    <div class="pull-left info">
+                        <a href="~/Students/Details"><p> @init @Model.ApplicationUser.lastName</p></a>
+                        <p class="designation">@role</p>
+                    </div>
+                </div>
+                <ul class="sidebar-menu">
+                    <li><a href="~/Home/Index"><i class="fa fa-dashboard"></i><span>Dashboard</span></a></li>
+                    <li><a href="~/Libraries/Index"><i class="fa fa-institution"></i><span>Library</span></a></li>
+                    <li><a href="~/ClassTasks/Index"><i class="fa fa-tasks"></i><span>Tasks</span></a></li>
+                    <li><a href="~/CASS/Report"><i class="fa fa-th-list"></i><span>Cass Report</span></a></li>
+                </ul>
+            </section>
+        </aside>
+        <div class="content-wrapper">
+            <div class="row user">
+                <div class="col-md-12">
+                    <div class="profile">
+                        <div class="info">
+                            <img class="user-img" src="@Url.Action("UserPhoto","Home")">
+                        </div>
+                        <div class="cover-image"></div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card p-0">
+                        <ul class="nav nav-tabs nav-stacked user-tabs">
+                            <li><a href="~/ClassTasks/Timeline">Timeline</a></li>
+                            <li class="active"><a href="~/Students/Details">Profile</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-9">
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="user-details">
+                            <div class="card user-settings">
+                                <div class="panel panel-primary">
+                                    <div class="panel-heading" align="center">
+                                        <h2><b>@Model.ApplicationUser.fullName <i class="fa fa-info-circle"></i></b></h2>
+                                    </div>
+                                    <div class="panel-body" align="left">
+                                        <div class="well">
+                                            <dl class="dl-horizontal">                                                
+                                                <dt>
+                                                    @Html.DisplayNameFor(model => model.studNo)
+                                                </dt>
+
+                                                <dd>
+                                                    @Html.DisplayFor(model => model.studNo)
+                                                </dd>
+
+                                                <dt>
+                                                    @Html.DisplayNameFor(model => model.idNo)
+                                                </dt>
+
+                                                <dd>
+                                                    @Html.DisplayFor(model => model.idNo)
+                                                </dd>
+
+                                                <dt>
+                                                    @Html.DisplayNameFor(model => model.dob)
+                                                </dt>
+
+                                                <dd>
+                                                    @Model.dob.ToString("dd MMMM yyyy")
+                                                </dd>
+
+                                                <dt>
+                                                    @Html.DisplayNameFor(model => model.gender)
+                                                </dt>
+
+                                                <dd>
+                                                    @Html.DisplayFor(model => model.gender)
+                                                </dd>
+
+                                                <dt>
+                                                    @Html.DisplayNameFor(model => model.contNo)
+                                                </dt>
+
+                                                <dd>
+                                                    @Html.DisplayFor(model => model.contNo)
+                                                </dd>
+
+                                                <dt>
+                                                    @Html.DisplayNameFor(model => model.homeTel)
+                                                </dt>
+
+                                                <dd>
+                                                    @Html.DisplayFor(model => model.homeTel)
+                                                </dd>
+                                                
+                                                <dt>
+                                                    @Html.DisplayNameFor(model => model.ApplicationUser.Email)
+                                                </dt>
+
+                                                <dd>
+                                                    @Html.DisplayFor(model => model.ApplicationUser.Email)
+                                                </dd>
+                                                <dt>
+                                                    @Html.DisplayName("Home Address")
+                                                </dt>
+
+                                                <dd>
+                                                    @Html.DisplayFor(model => model.studentAddress.street)
+                                                </dd>
+                                                <dt>
+                                                    @Html.DisplayName(" ")
+                                                </dt>
+
+                                                <dd>
+                                                    @Html.DisplayFor(model => model.studentAddress.suburb)
+                                                </dd>
+                                                <dt>
+                                                    @Html.DisplayName(" ")
+                                                </dt>
+
+                                                <dd>
+                                                    @Html.DisplayFor(model => model.studentAddress.city)
+                                                </dd>
+                                                <dt>
+                                                    @Html.DisplayName(" ")
+                                                </dt>
+
+                                                <dd>
+                                                    @Html.DisplayFor(model => model.studentAddress.code)
+                                                </dd>
+                                            </dl>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="panel panel-primary">
+                                    <div class="panel-heading" align="center">
+                                        <h2><b>@Model.school.name <i class="fa fa-info-circle"></i></b></h2>
+                                    </div>
+                                    <div class="panel-body">
+                                        <div class="well">
+                                            <dl class="dl-horizontal">
+                                                <dt>
+                                                    @Html.DisplayNameFor(model => model.enrollment.grade)
+                                                </dt>
+
+                                                <dd>
+                                                    @Html.DisplayFor(model => model.enrollment.grade)@Html.DisplayFor(model => model.enrollment.group)
+                                                </dd>
+
+                                                <dt>
+                                                    @Html.DisplayName("Stream")
+                                                </dt>
+
+                                                <dd>
+                                                    @Html.DisplayFor(model => model.enrollment.stream.name)
+                                                </dd>
+
+                                                <dt>
+                                                    @Html.DisplayNameFor(model => model.school.TelNo)
+                                                </dt>
+
+                                                <dd>
+                                                    @Html.DisplayFor(model => model.school.TelNo)
+                                                </dd>
+
+                                                <dt>
+                                                    @Html.DisplayNameFor(model => model.school.FaxNo)
+                                                </dt>
+
+                                                <dd>
+                                                    @Html.DisplayFor(model => model.school.FaxNo)
+                                                </dd>
+
+                                                <dt>
+                                                    @Html.DisplayNameFor(model => model.school.Email)
+                                                </dt>
+
+                                                <dd>
+                                                    @Html.DisplayFor(model => model.school.Email)
+                                                </dd>
+
+                                                <dt>
+                                                    @Html.DisplayName("School Address")
+                                                </dt>
+
+                                                <dd>
+                                                    @Html.DisplayFor(model => model.school.schoolAddress.street)
+                                                </dd>
+                                                <dt>
+                                                    @Html.DisplayName(" ")
+                                                </dt>
+
+                                                <dd>
+                                                    @Html.DisplayFor(model => model.school.schoolAddress.suburb)
+                                                </dd>
+                                                <dt>
+                                                    @Html.DisplayName(" ")
+                                                </dt>
+
+                                                <dd>
+                                                    @Html.DisplayFor(model => model.school.schoolAddress.city)
+                                                </dd>
+                                                <dt>
+                                                    @Html.DisplayName(" ")
+                                                </dt>
+
+                                                <dd>
+                                                    @Html.DisplayFor(model => model.school.schoolAddress.code)
+                                                </dd>
+                                            </dl>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="~/js/jquery-2.1.4.min.js"></script>
+</body>
+</html>

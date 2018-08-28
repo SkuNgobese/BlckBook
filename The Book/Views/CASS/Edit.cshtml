@@ -1,0 +1,140 @@
+﻿@model The_Book.Models.AssessmentMark
+@using The_Book.Models
+@using Microsoft.AspNet.Identity
+@{
+    string userId = User.Identity.GetUserId();
+    ApplicationDbContext context = new ApplicationDbContext();
+    var user = context.Users.Find(userId);
+    var init = user.firstName.Substring(0, 1).ToUpper();
+    if (user.middleName != null)
+    {
+        init = user.firstName.Substring(0, 1).ToUpper() + user.middleName.Substring(0, 1).ToUpper();
+    }
+    var role = "Teacher";
+    var casstask = ((Assessment)TempData["cass"]);
+}
+<!DOCTYPE html>
+<html>
+<body class="sidebar-mini fixed">
+    <div class="wrapper">
+        <aside class="main-sidebar hidden-print">
+            <section class="sidebar">
+                <div class="user-panel">
+                    <div class="pull-left image"><img class="img-circle" src="@Url.Action("UserPhoto","Home")" alt="User Image"></div>
+                    <div class="pull-left info">
+                        <a href="~/Teachers/Details"><p> @init @user.lastName</p></a>
+                        <p class="designation">@role</p>
+                    </div>
+                </div>
+                <!-- Sidebar Menu-->
+                <ul class="sidebar-menu">
+                    <li><a href="~/Home/Index"><i class="fa fa-dashboard"></i><span>Dashboard</span></a></li>
+                    <li class="treeview active">
+                        <a href="#"><i class="fa fa-laptop"></i><span>Data Management</span><i class="fa fa-angle-right"></i></a>
+                        <ul class="treeview-menu">
+                            <li><a href="~/Libraries/Create"><i class="fa fa-circle-o"></i>Add to Library</a></li>
+                            <li><a href="~/CASS/Index"><i class="fa fa-circle-o"></i>CASS</a></li>
+                        </ul>
+                    </li>
+                    <li class="treeview">
+                        <a href="#"><i class="fa fa-user-plus"></i><span>Users Management</span><i class="fa fa-angle-right"></i></a>
+                        <ul class="treeview-menu">
+                            <li><a href="~/Students/Activate"><i class="fa fa-circle-o"></i>Students</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="~/Libraries/Index"><i class="fa fa-institution"></i><span>Library</span></a></li>
+                    <li><a href="~/ClassTasks/Create"><i class="fa fa-file-text-o"></i><span>Post Task</span></a></li>
+                    <li><a href="~/ClassTasks/Index"><i class="fa fa-tasks"></i><span>Tasks</span></a></li>
+                    <li class="treeview">
+                        <a href="#"><i class="fa fa-th-list"></i><span>Tables</span><i class="fa fa-angle-right"></i></a>
+                        <ul class="treeview-menu">
+                            <li><a href="~/Students/Index"><i class="fa fa-circle-o"></i> Students</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </section>
+        </aside>
+        <div class="content-wrapper">
+            <div class="page-title">
+                <div>
+                    <h1><i class="fa fa-edit"></i> Mark Sheet (@casstask.name)</h1>
+                </div>
+                <div>
+                    <ul class="breadcrumb side">
+                        <li><i class="fa fa-home fa-lg"></i></li>
+                        <li>Data Management</li>
+                        <li>CASS</li>
+                        <li class="active"><a href="#">Capture</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <table class="table table-hover table-bordered" id="sampleTable">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            @Html.DisplayName("Student No")
+                                        </th>
+                                        <th>
+                                            @Html.DisplayName("Student Name")
+                                        </th>
+                                        <th>
+                                            @Html.DisplayName("Mark")/@casstask.totalMark.ToString()
+                                        </th>
+                                        <th>
+                                            Options
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        @if (Model.Student.studNo != null)
+                                        {
+                                            <td style="padding:0px">
+                                                @Html.DisplayFor(modelItem => Model.Student.studNo)
+                                            </td>
+                                        }
+                                        else
+                                        {
+                                            <td style="padding:0px">
+                                                @Html.DisplayFor(modelItem => Model.Student.idNo)
+                                            </td>
+                                        }
+
+                                        <td style="padding:0px">
+                                            @Html.DisplayFor(modelItem => Model.Student.ApplicationUser.fullName)
+                                        </td>
+
+                                        @using (Html.BeginForm())
+                                        {
+                                            <td style="padding:0px">
+                                                @Html.AntiForgeryToken()
+                                                @Html.HiddenFor(model=>model.Id)
+                                                @Html.EditorFor(model => model.mark) @Html.ValidationMessageFor(model => model.mark, "", new { @class = "text-danger" })
+                                            </td>
+
+                                            <td style="padding:0px">
+                                                <button class="btn btn-primary" style="padding: 1px 1px" type="submit"><i class="fa fa-lg fa-fw fa-save"></i>Save</button>
+                                            </td>
+                                        }
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="~/js/jquery-2.1.4.min.js"></script>
+    <script type="text/javascript" src="~/js/plugins/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="~/js/plugins/dataTables.bootstrap.min.js"></script>
+    <script type="text/javascript">$('#sampleTable').DataTable();</script>
+</body>
+</html>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

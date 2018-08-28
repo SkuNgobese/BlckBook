@@ -1,0 +1,97 @@
+﻿@model The_Book.Models.TaskSubmission
+@using The_Book.Models
+@using Microsoft.AspNet.Identity
+@{
+    string userId = User.Identity.GetUserId();
+    string role = "";
+    var init = "";
+    ApplicationDbContext context = new ApplicationDbContext();
+    var user = context.Users.Find(userId);
+    role = "Student";
+    init = user.firstName.Substring(0, 1).ToUpper();
+    if (user.middleName != null)
+    {
+        init = user.firstName.Substring(0, 1).ToUpper() + user.middleName.Substring(0, 1).ToUpper();
+    }
+}
+<!DOCTYPE html>
+<html>
+<body class="sidebar-mini fixed">
+    <div class="wrapper">
+        <aside class="main-sidebar hidden-print">
+            <section class="sidebar">
+                <div class="user-panel">
+                    <div class="pull-left image"><img class="img-circle" src="@Url.Action("UserPhoto","Home")" alt="User Image"></div>
+                    <div class="pull-left info">
+                        <a href="~/Students/Details"><p> @init @user.lastName</p></a>
+                        <p class="designation">@role</p>
+                    </div>
+                </div>
+                <!-- Sidebar Menu-->
+                <ul class="sidebar-menu">
+                    <li><a href="~/Home/Index"><i class="fa fa-dashboard"></i><span>Dashboard</span></a></li>
+                    <li><a href="~/Libraries/Index"><i class="fa fa-institution"></i><span>Library</span></a></li>
+                    <li class="active"><a href="~/ClassTasks/Index"><i class="fa fa-tasks"></i><span>Tasks</span></a></li>
+                    <li><a href="~/CASS/Report"><i class="fa fa-th-list"></i><span>Cass Report</span></a></li>
+                </ul>
+            </section>
+        </aside>
+        <div class="content-wrapper">
+            <div class="row user">
+                <div class="page-title">
+                    <div>
+                        <h1><i class="fa fa-paper-plane-o"></i> Submission</h1>
+                    </div>
+                    <div>
+                        <ul class="breadcrumb">
+                            <li><i class="fa fa-home fa-lg"></i></li>
+                            <li>Tasks</li>
+                            <li><a href="#">Submit</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card p-0">
+                        <ul class="nav nav-tabs nav-stacked user-tabs">
+                            <li class="active"><a href="#" data-toggle="tab">Task Submission</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-9">
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="user-details">
+                            <div class="card user-settings">
+                                @using (Html.BeginForm("Submit", "ClassTasks", FormMethod.Post, new { @class = "form-horizontal", enctype = "multipart/form-data", role = "form" }))
+                                {
+                                    <h3 class="line-head"><i class="fa fa-file-o"></i> Task</h3>
+                                    @Html.AntiForgeryToken()
+                                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                                    <div class="row">
+                                        <div class="col-md-8 mb-20">
+                                            <label>Document</label>
+                                            <input class="form-control" type="file" name="@Html.NameFor(x => x.file)" id="@Html.IdFor(x=>x.file)" />
+                                            @Html.ValidationMessageFor(model => model.file, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+
+                                    <div class="card-footer">
+                                        <div class="row">
+                                            <div class="col-md-8">
+                                                <input type="submit" class="btn btn-primary icon-btn" value="Submit" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="~/js/jquery-2.1.4.min.js"></script>
+</body>
+</html>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

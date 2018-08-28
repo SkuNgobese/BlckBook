@@ -1,0 +1,165 @@
+﻿@model The_Book.Models.School
+@{
+    string role = "Administrator";
+}
+<!DOCTYPE html>
+<html>
+<body class="sidebar-mini fixed">
+    <div class="wrapper">
+        <aside class="main-sidebar hidden-print">
+            <section class="sidebar">
+                <div class="user-panel">
+                    <div class="pull-left image"><img class="img-circle" src="@Url.Action("UserPhoto","Home")" alt="User Image"></div>
+                    <div class="pull-left info">
+                        <p class="designation">@role</p>
+                    </div>
+                </div>
+                <!-- Sidebar Menu-->
+                <ul class="sidebar-menu">
+                    <li><a href="~/Home/Index"><i class="fa fa-dashboard"></i><span>Dashboard</span></a></li>
+                    <li class="treeview active">
+                        <a href="#"><i class="fa fa-laptop"></i><span>Data Management</span><i class="fa fa-angle-right"></i></a>
+                        <ul class="treeview-menu">
+                            <li><a href="~/Schools/Create"><i class="fa fa-circle-o"></i>Add School</a></li>
+                        </ul>
+                    </li>
+                    <li class="treeview">
+                        <a href="#"><i class="fa fa-user-plus"></i><span>Users Management</span><i class="fa fa-angle-right"></i></a>
+                        <ul class="treeview-menu">
+                            <li><a href="~/Account/ManagerRegister"><i class="fa fa-circle-o"></i>Acount Managers</a></li>
+                        </ul>
+                    </li>
+                    <li class="treeview">
+                        <a href="#"><i class="fa fa-th-list"></i><span>Tables</span><i class="fa fa-angle-right"></i></a>
+                        <ul class="treeview-menu">
+                            <li><a href="~/Schools/Index"><i class="fa fa-circle-o"></i> Schools</a></li>
+                            <li><a href="~/Managers/Index"><i class="fa fa-circle-o"></i> Managers</a></li>
+                            <li><a href="~/Teachers/Index"><i class="fa fa-circle-o"></i> Teachers</a></li>
+                            <li><a href="~/Students/Index"><i class="fa fa-circle-o"></i> Students</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </section>
+        </aside>
+        <div class="content-wrapper">
+            <div class="row user">
+                <div class="page-title">
+                    <div>
+                        <h1><i class="fa fa-institution"></i>School</h1>
+                    </div>
+                    <div>
+                        <ul class="breadcrumb">
+                            <li><i class="fa fa-home fa-lg"></i></li>
+                            <li>Data Management</li>
+                            <li><a href="#">Add School</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card p-0">
+                        <ul class="nav nav-tabs nav-stacked user-tabs">
+                            <li class="active"><a href="#" data-toggle="tab">Add School</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-9">
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="user-details">
+                            <div class="card user-settings">
+                                @using (Html.BeginForm("Create", "Schools", FormMethod.Post, new { @class = "form-horizontal", enctype = "multipart/form-data", role = "form" }))
+                                {
+                                    <h3 class="line-head"><i class="fa fa-edit"></i> Register School</h3>
+                                    @Html.AntiForgeryToken()
+                                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                                    <div class="row">
+                                        <div class="col-md-8 mb-20">
+                                            <label>School Emblem</label>
+                                            <input class="form-control" type="file" name="@Html.NameFor(x=>x.poImgFile)" id="@Html.IdFor(x=>x.poImgFile)" />
+                                            @Html.ValidationMessageFor(model => model.poImgFile, "", new { @class = "text-danger" })
+                                        </div>
+                                        <div class="col-md-8 mb-20">
+                                            <label>School Name</label>
+                                            @Html.EditorFor(model => model.name, new { htmlAttributes = new { @class = "form-control" } })
+                                            @Html.ValidationMessageFor(model => model.name, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="row mb-20">
+                                        <div class="col-md-4">
+                                            <label>Telephone No.</label>
+                                            @Html.EditorFor(model => model.TelNo, new { htmlAttributes = new { @class = "form-control" } })
+                                            @Html.ValidationMessageFor(model => model.TelNo, "", new { @class = "text-danger" })
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label>Fax No.</label>
+                                            @Html.EditorFor(model => model.FaxNo, new { htmlAttributes = new { @class = "form-control" } })
+                                            @Html.ValidationMessageFor(model => model.FaxNo, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-20">
+                                        <div class="col-md-4">
+                                            <label>Email Address</label>
+                                            @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" } })
+                                            @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label>Province</label>
+                                            @Html.DropDownListFor(model => model.schoolAddress.province, new[]{
+                                            new SelectListItem(){Text="KwaZulu Natal",Value="KwaZulu Natal"},
+                                            new SelectListItem(){Text="Eastern Cape",Value="Eastern Cape"},
+                                            new SelectListItem(){Text="Free State",Value="Free State"},
+                                            new SelectListItem(){Text="Gauteng",Value="Gauteng"},
+                                            new SelectListItem(){Text="Limpopo",Value="Limpopo"},
+                                            new SelectListItem(){Text="Mpumalanga",Value="Mpumalanga"},
+                                            new SelectListItem(){Text="Northern Cape",Value="Western Cape"},
+                                            new SelectListItem(){Text="North West", Value="North West"},
+                                            new SelectListItem(){Text="Western Cape", Value="Western Cape"},
+                                            }, "Select Province", htmlAttributes: new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => model.schoolAddress.province, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-8 mb-20">
+                                            <label>Address</label>
+                                            @Html.EditorFor(model => model.schoolAddress.street, new { htmlAttributes = new { placeholder = "Street", @class = "form-control" } })
+                                            @Html.ValidationMessageFor(model => model.schoolAddress.street, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    <div class="row mb-20">
+                                        <div class="col-md-4">
+                                            @Html.EditorFor(model => model.schoolAddress.suburb, new { htmlAttributes = new { placeholder = "Suburb", @class = "form-control" } })
+                                            @Html.ValidationMessageFor(model => model.schoolAddress.suburb, "", new { @class = "text-danger" })
+                                        </div>
+                                        <div class="col-md-4">
+                                            @Html.EditorFor(model => model.schoolAddress.city, new { htmlAttributes = new { placeholder = "City", @class = "form-control" } })
+                                            @Html.ValidationMessageFor(model => model.schoolAddress.city, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-8 mb-20">
+                                            @Html.EditorFor(model => model.schoolAddress.code, new { htmlAttributes = new { placeholder = "Code", @class = "form-control" } })
+                                            @Html.ValidationMessageFor(model => model.schoolAddress.code, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    <div class="card-footer">
+                                        <div class="row">
+                                            <div class="col-md-8">
+                                                <input type="submit" class="btn btn-primary icon-btn" value="Register" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    }
+                                </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="~/js/jquery-2.1.4.min.js"></script>
+</body>
+</html>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

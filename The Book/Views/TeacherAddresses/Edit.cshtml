@@ -1,0 +1,134 @@
+﻿@model The_Book.Models.TeacherAddress
+@using The_Book.Models
+@using Microsoft.AspNet.Identity
+@using Microsoft.AspNet.Identity.EntityFramework;
+@{
+    string userId = User.Identity.GetUserId();
+    string role = "";
+    var init = "";
+    ApplicationDbContext context = new ApplicationDbContext();
+    var user = context.Users.Where(x => x.Id == userId).FirstOrDefault();
+    init = user.firstName.Substring(0, 1).ToUpper();
+    if (user.middleName != null)
+    {
+        init = user.firstName.Substring(0, 1).ToUpper() + user.middleName.Substring(0, 1).ToUpper();
+    }
+    role = "Teacher";
+}
+<!DOCTYPE html>
+<html>
+<body class="sidebar-mini fixed">
+    <div class="wrapper">
+        <aside class="main-sidebar hidden-print">
+            <section class="sidebar">
+                <div class="user-panel">
+                    <div class="pull-left image"><img class="img-circle" src="@Url.Action("UserPhoto","Home")" alt="User Image"></div>
+                    <div class="pull-left info">
+                        <a href="~/Teachers/Details"><p> @init @user.lastName</p></a>
+                        <p class="designation">@role</p>
+                    </div>
+                </div>
+                <ul class="sidebar-menu">
+                    <li><a href="~/Home/Index"><i class="fa fa-dashboard"></i><span>Dashboard</span></a></li>
+                    <li class="treeview">
+                        <a href="#"><i class="fa fa-laptop"></i><span>Data Management</span><i class="fa fa-angle-right"></i></a>
+                        <ul class="treeview-menu">
+                            <li><a href="~/Libraries/Create"><i class="fa fa-circle-o"></i>Add to Library</a></li>
+                            <li><a href="~/CASS/Index"><i class="fa fa-circle-o"></i>CASS</a></li>
+                        </ul>
+                    </li>
+                    <li class="treeview">
+                        <a href="#"><i class="fa fa-user-plus"></i><span>Users Management</span><i class="fa fa-angle-right"></i></a>
+                        <ul class="treeview-menu">
+                            <li><a href="~/Students/Activate"><i class="fa fa-circle-o"></i>Students</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="~/Libraries/Index"><i class="fa fa-institution"></i><span>Library</span></a></li>
+                    <li><a href="~/ClassTasks/Create"><i class="fa fa-file-text-o"></i><span>Post Task</span></a></li>
+                    <li><a href="~/ClassTasks/Index"><i class="fa fa-tasks"></i><span>Tasks</span></a></li>
+                    <li class="treeview">
+                        <a href="#"><i class="fa fa-th-list"></i><span>Tables</span><i class="fa fa-angle-right"></i></a>
+                        <ul class="treeview-menu">
+                            <li><a href="~/Students/Index"><i class="fa fa-circle-o"></i> Students</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </section>
+        </aside>
+        <div class="content-wrapper">
+            <div class="row user">
+                <div class="col-md-12">
+                    <div class="profile">
+                        <div class="info">
+                            <img class="user-img" src="@Url.Action("UserPhoto","Home")">
+                        </div>
+                        <div class="cover-image"></div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card p-0">
+                        <ul class="nav nav-tabs nav-stacked user-tabs">
+                            <li><a href="~/ClassTasks/Timeline">Timeline</a></li>
+                            <li><a href="~/Teachers/Details">Profile</a></li>
+                            <li class="active"><a href="#">Address</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-9">
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="user-details">
+                            <div class="card user-settings">
+                                <h4 class="line-head">@user.fullName</h4>
+                                @using (Html.BeginForm())
+                                {
+                                    @Html.AntiForgeryToken()
+                                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                                    @Html.HiddenFor(model => model.Id)
+
+                                    <div class="row">
+                                        <div class="col-md-8 mb-20">
+                                            <label>Street</label>
+                                            @Html.EditorFor(model => model.street, new { htmlAttributes = new { @class = "form-control" } })
+                                            @Html.ValidationMessageFor(model => model.street, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    <div class="row mb-20">
+                                        <div class="col-md-4">
+                                            <label>Suburb</label>
+                                            @Html.EditorFor(model => model.suburb, new { htmlAttributes = new { @class = "form-control" } })
+                                            @Html.ValidationMessageFor(model => model.suburb, "", new { @class = "text-danger" })
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label>City</label>
+                                            @Html.EditorFor(model => model.city, new { htmlAttributes = new { @class = "form-control" } })
+                                            @Html.ValidationMessageFor(model => model.city, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-8 mb-20">
+                                            <label>Code</label>
+                                            @Html.EditorFor(model => model.code, new { htmlAttributes = new { @class = "form-control" } })
+                                            @Html.ValidationMessageFor(model => model.code, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    <div class="card-footer">
+                                        <div class="row">
+                                            <div class="col-md-8">
+                                                <input type="submit" class="btn btn-primary icon-btn" value="Submit" />&nbsp;&nbsp;&nbsp;<a class="btn btn-default icon-btn" href="~/Manage/Index"><i class="fa fa-fw fa-lg fa-chevron-circle-left"></i>Back</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="~/js/jquery-2.1.4.min.js"></script>
+</body>
+</html>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

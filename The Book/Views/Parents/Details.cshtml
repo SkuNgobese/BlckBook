@@ -1,0 +1,75 @@
+﻿@model The_Book.Models.Parent
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Parent</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.title)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.title)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.fName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.fName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.mName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.mName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.lName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.lName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.contactNo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.contactNo)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.workTel)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.workTel)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.emailAddress)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.emailAddress)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

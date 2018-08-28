@@ -1,0 +1,138 @@
+﻿@model The_Book.Models.RegisterViewModel
+@{
+    Layout = "~/Views/Shared/_ExternalLayout.cshtml";
+}
+<!DOCTYPE html>
+<html>
+<body>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+    <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script> 
+    <script type="text/javascript">
+    $(document).ready(function () {
+        $("#schoolname").autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: "/Account/GetSchools",
+                    minLength: 3,
+                    delay: 100,
+                    type: "POST",
+                    dataType: "json",
+                    data: { Prefix: request.term },
+                    success: function (data) {
+                        response($.map(data, function (item) {
+                            return { label: item.label, value: item.value };
+                        }))
+                    },
+                    error: function () {
+                        alert('something went wrong !');
+                    }
+                })
+            },
+            messages: {
+                noResults: "", results: ""
+            }
+        });
+    })
+    </script>
+    <br />
+    <div class="page-title">
+        <div>
+            <h1><img src="~/Images/bb_logo.JPG" width="170" height="40"></h1>
+        </div>
+        <div>
+            <ul class="breadcrumb">
+                <li><i class="fa fa-check-circle"></i></li>
+                <li>Page 1.</li>
+            </ul>
+        </div>
+    </div>
+    <div class="wrapper">
+        <div class="row user">
+            <div class="col-md-3">
+                <div class="card p-0">
+                    <ul class="nav nav-tabs nav-stacked user-tabs">
+                        <li class="active"><a href="#" data-toggle="tab">User Registration</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-md-9">
+                <div class="tab-content">
+                    <div class="tab-pane active" id="user-details">
+                        <div class="card user-settings">
+                            @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "form-horizontal", enctype = "multipart/form-data", role = "form" }))
+                            {
+                                <h3 class="line-head"><i class="fa fa-edit"></i>Register</h3>
+
+                                @Html.AntiForgeryToken()
+                                @Html.ValidationSummary("", new { @class = "text-danger" })
+                                <div class="row mb-20">
+                                    <div class="col-md-4">
+                                        <div class="radio-inline">
+                                            <label>
+                                                @Html.RadioButtonFor(model => model.role, "Teacher") Teacher
+                                            </label>
+                                        </div>
+                                        <div class="radio-inline">
+                                            <label>
+                                                @Html.RadioButtonFor(model => model.role, "Student") Student
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label>School</label>
+                                        @Html.EditorFor(model=>model.schoolname, new { htmlAttributes = new { @class = "form-control", @id = "schoolname" } })
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label>Display Photo</label>
+                                        <input class="form-control" type="file" name="@Html.NameFor(x=>x.poImgFile)" id="@Html.IdFor(x=>x.poImgFile)" />
+                                    </div>
+                                </div>
+                                
+                                <div class="row mb-20">
+                                    <div class="col-md-4">
+                                        <label>First Name</label>
+                                        @Html.TextBoxFor(m => m.firstName, new { @class = "form-control" })
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label>Middle Name</label>
+                                        @Html.TextBoxFor(m => m.middleName, new { @class = "form-control" })
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label>Last Name</label>
+                                        @Html.TextBoxFor(m => m.lastName, new { @class = "form-control" })
+                                    </div>
+                                </div>
+                                <div class="row mb-20">
+                                    <div class="col-md-4">
+                                        <label>Email</label>
+                                        @Html.TextBoxFor(m => m.Email, new { placeholder = "as username", @class = "form-control" })
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label>Password</label>
+                                        @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label>Confirm Password</label>
+                                        @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control" })
+                                    </div>
+                                </div>
+                                <div class="card-footer">
+                                    <div class="row">
+                                        <div class="col-md-8 btn-container">
+                                            <button class="btn btn-primary icon-btn">Register<i class="fa fa-fw fa-lg fa-check-circle-o"></i></button>&nbsp;&nbsp;&nbsp;<a class="btn btn-default icon-btn" href="~/Account/Login"><i class="fa fa-fw fa-lg fa-chevron-circle-left"></i>To Login</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>      
+</body>
+</html>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

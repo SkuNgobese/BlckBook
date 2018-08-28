@@ -1,0 +1,207 @@
+﻿@model The_Book.Models.Teacher
+@using The_Book.Models
+@using Microsoft.AspNet.Identity
+@{
+    string userId = User.Identity.GetUserId();
+    var dbUsers = new ApplicationDbContext();
+    var user = dbUsers.Users.Where(x => x.Id == userId).FirstOrDefault();
+    var init = user.firstName.Substring(0, 1) + user.middleName.Substring(0, 1);
+}
+<!DOCTYPE html>
+<html>
+<body class="sidebar-mini fixed">
+    <div class="wrapper">
+        <aside class="main-sidebar hidden-print">
+            <section class="sidebar">
+                <div class="user-panel">
+                    <div class="pull-left image"><img class="img-circle" src="@Url.Action("UserPhoto","Home")" alt="User Image"></div>
+                    <div class="pull-left info">
+                        <p> @init @user.lastName</p>
+                        <p class="designation">@user.role</p>
+                    </div>
+                </div>
+                <ul class="sidebar-menu">
+                    <li class="active"><a href="~/Home/Index"><i class="fa fa-dashboard"></i><span>Dashboard</span></a></li>
+                    <li class="treeview">
+                        <a href="#"><i class="fa fa-laptop"></i><span>Data Management</span><i class="fa fa-angle-right"></i></a>
+                        <ul class="treeview-menu">
+                            <li><a href="~/Streams/Create"><i class="fa fa-circle-o"></i>Add Classes</a></li>
+                            <li><a href="ui-cards.html"><i class="fa fa-circle-o"></i> Cards</a></li>
+                            <li><a href="widgets.html"><i class="fa fa-circle-o"></i> Widgets</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="charts.html"><i class="fa fa-pie-chart"></i><span>Charts</span></a></li>
+                    <li class="treeview">
+                        <a href="#"><i class="fa fa-edit"></i><span>Forms</span><i class="fa fa-angle-right"></i></a>
+                        <ul class="treeview-menu">
+                            <li><a href="form-components.html"><i class="fa fa-circle-o"></i> Form Components</a></li>
+                            <li><a href="form-custom.html"><i class="fa fa-circle-o"></i> Custom Components</a></li>
+                            <li><a href="form-samples.html"><i class="fa fa-circle-o"></i> Form Samples</a></li>
+                            <li><a href="form-notifications.html"><i class="fa fa-circle-o"></i> Form Notifications</a></li>
+                        </ul>
+                    </li>
+                    <li class="treeview">
+                        <a href="#"><i class="fa fa-th-list"></i><span>Tables</span><i class="fa fa-angle-right"></i></a>
+                        <ul class="treeview-menu">
+                            <li><a href="~/Schools/Index"><i class="fa fa-circle-o"></i> Schools</a></li>
+                            <li><a href="table-data-table.html"><i class="fa fa-circle-o"></i> Data Tables</a></li>
+                        </ul>
+                    </li>
+                    <li class="treeview">
+                        <a href="#"><i class="fa fa-file-text"></i><span>Pages</span><i class="fa fa-angle-right"></i></a>
+                        <ul class="treeview-menu">
+                            <li><a href="blank-page.html"><i class="fa fa-circle-o"></i> Blank Page</a></li>
+                            <li><a href="page-login.html"><i class="fa fa-circle-o"></i> Login Page</a></li>
+                            <li><a href="page-lockscreen.html"><i class="fa fa-circle-o"></i> Lockscreen Page</a></li>
+                            <li><a href="page-user.html"><i class="fa fa-circle-o"></i> User Page</a></li>
+                            <li><a href="page-invoice.html"><i class="fa fa-circle-o"></i> Invoice Page</a></li>
+                            <li><a href="page-calendar.html"><i class="fa fa-circle-o"></i> Calendar Page</a></li>
+                            <li><a href="page-mailbox.html"><i class="fa fa-circle-o"></i> Mailbox</a></li>
+                            <li><a href="page-error.html"><i class="fa fa-circle-o"></i> Error Page</a></li>
+                        </ul>
+                    </li>
+                    <li class="treeview">
+                        <a href="#"><i class="fa fa-share"></i><span>Multilevel Menu</span><i class="fa fa-angle-right"></i></a>
+                        <ul class="treeview-menu">
+                            <li><a href="blank-page.html"><i class="fa fa-circle-o"></i> Level One</a></li>
+                            <li class="treeview">
+                                <a href="#"><i class="fa fa-circle-o"></i><span> Level One</span><i class="fa fa-angle-right"></i></a>
+                                <ul class="treeview-menu">
+                                    <li><a href="blank-page.html"><i class="fa fa-circle-o"></i> Level Two</a></li>
+                                    <li><a href="#"><i class="fa fa-circle-o"></i><span> Level Two</span></a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </section>
+        </aside>
+        <div class="content-wrapper">
+            <div class="row user">
+                <div class="col-md-12">
+                    <div class="profile">
+                        <div class="info">
+                            <img class="user-img" src="@Url.Action("UserPhoto","Home")">
+                            @*<h4>@user.fullName</h4>
+                            <p>@user.role</p>*@
+                        </div>
+                        <div class="cover-image"></div>                    
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card p-0">
+                        <ul class="nav nav-tabs nav-stacked user-tabs">
+                            <li class="disabled"><a href="#" data-toggle="tab">Timeline</a></li>
+                            <li class="active"><a href="#" data-toggle="tab">Profile</a></li>
+                            <li class="disabled"><a href="#" data-toggle="tab">Address</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-9">
+                    <div class="tab-content">
+                        <div class="tab-pane fade" id="user-timeline">
+                            <div class="timeline">
+                                <div class="post">
+                                    <div class="post-media">
+                                        <a href="#"><img src="https://s3.amazonaws.com/uifaces/faces/twitter/jsa/48.jpg"></a>
+                                        <div class="content">
+                                            <h5><a href="#">John Doe</a></h5>
+                                            <p class="text-muted"><small>2 January at 9:30</small></p>
+                                        </div>
+                                    </div>
+                                    <div class="post-content">
+                                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,	quis tion ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non	proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                                    </div>
+                                    <ul class="post-utility">
+                                        <li class="likes"><a href="#"><i class="fa fa-fw fa-lg fa-thumbs-o-up"></i>Like</a></li>
+                                        <li class="shares"><a href="#"><i class="fa fa-fw fa-lg fa-share"></i>Share</a></li>
+                                        <li class="comments"><i class="fa fa-fw fa-lg fa-comment-o"></i> 5 Comments</li>
+                                    </ul>
+                                </div>
+                                <div class="post">
+                                    <div class="post-media">
+                                        <a href="#"><img src="https://s3.amazonaws.com/uifaces/faces/twitter/jsa/48.jpg"></a>
+                                        <div class="content">
+                                            <h5><a href="#">John Doe</a></h5>
+                                            <p class="text-muted"><small>2 January at 9:30</small></p>
+                                        </div>
+                                    </div>
+                                    <div class="post-content">
+                                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,	quis tion ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non	proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                                    </div>
+                                    <ul class="post-utility">
+                                        <li class="likes"><a href="#"><i class="fa fa-fw fa-lg fa-thumbs-o-up"></i>Like</a></li>
+                                        <li class="shares"><a href="#"><i class="fa fa-fw fa-lg fa-share"></i>Share</a></li>
+                                        <li class="comments"><i class="fa fa-fw fa-lg fa-comment-o"></i> 5 Comments</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane active" id="user-details">
+                            <div class="card user-settings">
+                                <h4 class="line-head">@user.fullName</h4>
+                                @using (Html.BeginForm())
+                                {
+                                    @Html.AntiForgeryToken()
+                                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                                    <div class="row mb-20">
+                                        <div class="col-md-4">
+                                            <label>School</label>
+                                            @Html.DropDownList("schoolid", ViewBag.schoollist as List<SelectListItem>, "Choose your school", new { @class = "form-control" })
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label>Salutation</label>
+                                            @Html.DropDownListFor(model => model.title, new[]{
+                                            new SelectListItem(){Text="Mr.",Value="Mr."},
+                                            new SelectListItem(){Text="Mrs.",Value="Mrs."},
+                                            new SelectListItem(){Text="Miss.",Value="Miss."},
+                                            new SelectListItem(){Text="Dr.", Value="Dr."},
+                                            new SelectListItem(){Text="Prof.", Value="Prof."},
+                                            }, "Select Title", new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => model.title, "", new { @class = "text-danger" })
+                                        </div>
+                                        <div class="clearfix"></div>
+                                    </div>
+                                    <div class="row mb-20">
+                                        <div class="col-md-4">
+                                            <label>Employee Number</label>
+                                            @Html.EditorFor(model => model.empNo, new { htmlAttributes = new { @class = "form-control" } })
+                                            @Html.ValidationMessageFor(model => model.empNo, "", new { @class = "text-danger" })
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label>ID/Passport Number</label>
+                                            @Html.EditorFor(model => model.idNo, new { htmlAttributes = new { @class = "form-control" } })
+                                            @Html.ValidationMessageFor(model => model.idNo, "", new { @class = "text-danger" })
+                                        </div>
+                                        <div class="clearfix"></div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-8 mb-20">
+                                            <label>Mobile No</label>
+                                            @Html.EditorFor(model => model.mobileNo, new { htmlAttributes = new { @class = "form-control" } })
+                                            @Html.ValidationMessageFor(model => model.mobileNo, "", new { @class = "text-danger" })
+                                        </div>
+                                        <div class="clearfix"></div>
+                                        <div class="col-md-8 mb-20">
+                                            <label>Office Phone</label>
+                                            @Html.EditorFor(model => model.telNo, new { htmlAttributes = new { @class = "form-control" } })
+                                            @Html.ValidationMessageFor(model => model.telNo, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    <div class="card-footer">
+                                        <div class="row">
+                                            <div class="col-md-8">
+                                                <input type="submit" class="btn btn-primary icon-btn" value="Submit" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,332 @@
+﻿@model The_Book.Models.Student
+@using The_Book.Models
+@using Microsoft.AspNet.Identity
+@using Microsoft.AspNet.Identity.EntityFramework;
+@{
+    string userId = User.Identity.GetUserId();
+    string role = "";
+    var init = "";
+    ApplicationDbContext context = new ApplicationDbContext();
+    var user = context.Users.Find(userId);
+    var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
+    var s = userManager.GetRoles(userId);
+    if (s[0].ToString() == "Admin")
+    {
+        role = "Administrator";
+    }
+    if (s[0].ToString() == "Manager")
+    {
+        role = "Account Manager";
+        var mangs = user.Manager;
+        var space = mangs.school.name.IndexOf(" ");
+        init = mangs.school.name.Substring(0, 1).ToUpper() + mangs.school.name.Substring(1, space).ToLower();
+    }
+    if (s[0].ToString() == "Teacher")
+    {
+        role = "Teacher";
+        init = user.firstName.Substring(0, 1).ToUpper();
+        if (user.middleName != null)
+        {
+            init = user.firstName.Substring(0, 1).ToUpper() + user.middleName.Substring(0, 1).ToUpper();
+        }
+    }
+}
+<!DOCTYPE html>
+<html>
+<body class="sidebar-mini fixed">
+    <div class="wrapper">
+        <aside class="main-sidebar hidden-print">
+            <section class="sidebar">
+                <div class="user-panel">
+                    <div class="pull-left image"><img class="img-circle" src="@Url.Action("UserPhoto","Home")" alt="User Image"></div>
+                    <div class="pull-left info">
+                        @if (s[0].ToString() == "Teacher")
+                        {
+                            <a href="~/Teachers/Details"><p> @init @user.lastName</p></a>
+                        }
+                        else
+                        {
+                            <p> @init</p>
+                        }
+                        <p class="designation">@role</p>
+                    </div>
+                </div>
+                <!-- Sidebar Menu-->
+                <ul class="sidebar-menu">
+                    <li><a href="~/Home/Index"><i class="fa fa-dashboard"></i><span>Dashboard</span></a></li>
+                    <li class="treeview">
+                        <a href="#"><i class="fa fa-laptop"></i><span>Data Management</span><i class="fa fa-angle-right"></i></a>
+                        <ul class="treeview-menu">
+                            @if (s[0].ToString() == "Admin")
+                            {
+                                <li><a href="~/Schools/Create"><i class="fa fa-circle-o"></i>Add School</a></li>
+                            }
+                            @if (s[0].ToString() == "Manager")
+                            {
+                                <li class="treeview">
+                                    <a href="#"><i class="fa fa-circle-o"></i><span> Add Classes</span><i class="fa fa-angle-right"></i></a>
+                                    <ul class="treeview-menu">
+                                        <li><a href="~/Subjects/Add"><i class="fa fa-circle-o"></i><span> Grade 8-9</span></a></li>
+                                        <li><a href="~/Streams/Create"><i class="fa fa-circle-o"></i> Grade 10-12</a></li>
+                                    </ul>
+                                </li>                                    
+                                <li><a href="~/Libraries/Create"><i class="fa fa-circle-o"></i>Add to Library</a></li>
+                            }
+                            @if (s[0].ToString() == "Teacher")
+                            {
+                                <li><a href="~/Libraries/Create"><i class="fa fa-circle-o"></i>Add to Library</a></li>
+                            }
+                        </ul>
+                    </li>
+                    <li class="treeview">
+                        <a href="#"><i class="fa fa-user-plus"></i><span>Users Management</span><i class="fa fa-angle-right"></i></a>
+                        <ul class="treeview-menu">
+                            @if (s[0].ToString() == "Admin")
+                            {
+                                <li><a href="~/Account/ManagerRegister"><i class="fa fa-circle-o"></i>Acount Managers</a></li>
+                            }
+                            @if (s[0].ToString() == "Manager")
+                            {
+                                <li><a href="~/Teachers/Activate"><i class="fa fa-circle-o"></i>Teachers</a></li>
+                                <li><a href="~/Parents/Create"><i class="fa fa-circle-o"></i>Add Parent</a></li>
+                            }
+                            @if (s[0].ToString() == "Teacher")
+                            {
+                                <li><a href="~/Students/Activate"><i class="fa fa-circle-o"></i>Students</a></li>
+                            }
+                        </ul>
+                    </li>
+                    @if (s[0].ToString() != "Admin")
+                    {
+                        <li><a href="~/Libraries/Index"><i class="fa fa-institution"></i><span>Library</span></a></li>
+                    }
+                    @if (s[0].ToString() == "Teacher")
+                    {
+                        <li><a href="~/ClassTasks/Create"><i class="fa fa-file-text-o"></i><span>Post Task</span></a></li>
+                    }
+                    @if (s[0].ToString() == "Manager")
+                    {
+                        <li><a href="~/SchoolEvents/Manage"><i class="fa fa-calendar-check-o"></i><span>Events</span></a></li>
+                    }
+                    @if (s[0].ToString() == "Teacher")
+                    {
+                        <li><a href="~/ClassTasks/Index"><i class="fa fa-tasks"></i><span>Tasks</span></a></li>
+                    }
+                    <li class="treeview active">
+                        <a href="#"><i class="fa fa-th-list"></i><span>Tables</span><i class="fa fa-angle-right"></i></a>
+                        <ul class="treeview-menu">
+                            @if (s[0].ToString() == "Admin")
+                            {
+                                <li><a href="~/Schools/Index"><i class="fa fa-circle-o"></i> Schools</a></li>
+                                <li><a href="~/Managers/Index"><i class="fa fa-circle-o"></i> Managers</a></li>
+                            }
+                            @if (s[0].ToString() == "Manager" || s[0].ToString() == "Admin")
+                            {
+                                <li><a href="~/Teachers/Index"><i class="fa fa-circle-o"></i> Teachers</a></li>
+                                <li><a href="~/Students/Index"><i class="fa fa-circle-o"></i> Students</a></li>
+                            }
+                            @if (s[0].ToString() == "Teacher")
+                            {
+                                <li><a href="~/Students/Index"><i class="fa fa-circle-o"></i> Students</a></li>
+                            }
+                        </ul>
+                    </li>
+                </ul>
+            </section>
+        </aside>
+        <div class="content-wrapper">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="panel panel-primary">
+                                <div class="panel-heading" align="center">
+                                    <h2>@Model.ApplicationUser.fullName</h2>
+                                </div>
+                                <div class="panel-body" align="left">
+                                    <div class="well">
+                                        <dl class="dl-horizontal">
+
+                                            <dt>
+                                                @Html.DisplayNameFor(model => model.studNo)
+                                            </dt>
+
+                                            <dd>
+                                                @Html.DisplayFor(model => model.studNo)
+                                            </dd>
+
+                                            <dt>
+                                                @Html.DisplayNameFor(model => model.enrollment.grade)
+                                            </dt>
+
+                                            <dd>
+                                                @Html.DisplayFor(model => model.enrollment.grade)@Html.DisplayFor(model => model.enrollment.group)
+                                            </dd>
+
+                                            <dt>
+                                                @Html.DisplayName("Stream")
+                                            </dt>
+
+                                            <dd>
+                                                @Html.DisplayFor(model => model.enrollment.stream.name)
+                                            </dd>
+                                            <dt>
+                                                @Html.DisplayNameFor(model => model.idNo)
+                                            </dt>
+
+                                            <dd>
+                                                @Html.DisplayFor(model => model.idNo)
+                                            </dd>
+
+                                            <dt>
+                                                @Html.DisplayNameFor(model => model.dob)
+                                            </dt>
+
+                                            <dd>
+                                                @Model.dob.ToString("dd MMM yyyy")
+                                            </dd>
+
+                                            <dt>
+                                                @Html.DisplayNameFor(model => model.gender)
+                                            </dt>
+
+                                            <dd>
+                                                @Html.DisplayFor(model => model.gender)
+                                            </dd>
+
+                                            <dt>
+                                                @Html.DisplayNameFor(model => model.contNo)
+                                            </dt>
+
+                                            <dd>
+                                                @Html.DisplayFor(model => model.contNo)
+                                            </dd>
+
+                                            <dt>
+                                                @Html.DisplayNameFor(model => model.homeTel)
+                                            </dt>
+
+                                            <dd>
+                                                @Html.DisplayFor(model => model.homeTel)
+                                            </dd>
+
+                                            <dt>
+                                                @Html.DisplayNameFor(model => model.ApplicationUser.Email)
+                                            </dt>
+
+                                            <dd>
+                                                @Html.DisplayFor(model => model.ApplicationUser.Email)
+                                            </dd>
+                                            <dt>
+                                                @Html.DisplayName("Home Address")
+                                            </dt>
+
+                                            <dd>
+                                                @Html.DisplayFor(model => model.studentAddress.street)
+                                            </dd>
+                                            <dt>
+                                                @Html.DisplayName(" ")
+                                            </dt>
+
+                                            <dd>
+                                                @Html.DisplayFor(model => model.studentAddress.suburb)
+                                            </dd>
+                                            <dt>
+                                                @Html.DisplayName(" ")
+                                            </dt>
+
+                                            <dd>
+                                                @Html.DisplayFor(model => model.studentAddress.city)
+                                            </dd>
+                                            <dt>
+                                                @Html.DisplayName(" ")
+                                            </dt>
+
+                                            <dd>
+                                                @Html.DisplayFor(model => model.studentAddress.code)
+                                            </dd>
+                                            @if (s[0].ToString() == "Admin")
+                                            {
+                                                <dt>
+                                                    @Html.DisplayName("School")
+                                                </dt>
+
+                                                <dd>
+                                                    @Html.DisplayFor(model => model.school.name)
+                                                </dd>
+
+                                                <dt>
+                                                    @Html.DisplayNameFor(model => model.school.schoolAddress.province)
+                                                </dt>
+
+                                                <dd>
+                                                    @Html.DisplayFor(model => model.school.schoolAddress.province)
+                                                </dd>
+
+                                                <dt>
+                                                    @Html.DisplayName("School Address")
+                                                </dt>
+
+                                                <dd>
+                                                    @Html.DisplayFor(model => model.school.schoolAddress.street)
+                                                </dd>
+                                                <dt>
+                                                    @Html.DisplayName(" ")
+                                                </dt>
+
+                                                <dd>
+                                                    @Html.DisplayFor(model => model.school.schoolAddress.suburb)
+                                                </dd>
+                                                <dt>
+                                                    @Html.DisplayName(" ")
+                                                </dt>
+
+                                                <dd>
+                                                    @Html.DisplayFor(model => model.school.schoolAddress.city)
+                                                </dd>
+                                                <dt>
+                                                    @Html.DisplayName(" ")
+                                                </dt>
+
+                                                <dd>
+                                                    @Html.DisplayFor(model => model.school.schoolAddress.code)
+                                                </dd>
+                                            }
+                                            @if (Model.active == true)
+                                            {
+                                                <dt>
+                                                    @Html.DisplayName("Status")
+                                                </dt>
+
+                                                <dd class="alert-success">
+                                                    Active
+                                                </dd>
+
+                                                <dt>
+                                                    @Html.DisplayName("Date")
+                                                </dt>
+
+                                                <dd>
+                                                    @Model._date.ToString("dd MMM yyyy hh:mm tt")
+                                                </dd>
+                                            }
+                                        </dl>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <a class="btn btn-default icon-btn" href="~/Students/Index"><i class="fa fa-fw fa-lg fa-chevron-circle-left"></i>Back</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="~/js/jquery-2.1.4.min.js"></script>
+</body>
+</html>

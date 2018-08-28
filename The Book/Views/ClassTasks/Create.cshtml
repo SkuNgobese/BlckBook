@@ -1,0 +1,171 @@
+﻿@model The_Book.Models.ClassTask
+@using The_Book.Models
+@using Microsoft.AspNet.Identity
+@{
+    string userId = User.Identity.GetUserId();
+    string role = "";
+    var init = "";
+    ApplicationDbContext context = new ApplicationDbContext();
+    var user = context.Users.Find(userId);
+    init = user.firstName.Substring(0, 1).ToUpper();
+    if (user.middleName != null)
+    {
+        init = user.firstName.Substring(0, 1).ToUpper() + user.middleName.Substring(0, 1).ToUpper();
+    }
+    role = "Teacher";
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <script type="text/javascript" src="/scripts/jquery.min.js"></script>
+    <script type="text/javascript" src="/scripts/moment.min.js"></script>
+    <script type="text/javascript" src="/scripts/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/scripts/bootstrap-datetimepicker.*js"></script>
+    <link href="~/Content/bootstrap-datetimepicker.css" rel="stylesheet" />
+</head>
+<body class="sidebar-mini fixed">
+    <div class="wrapper">
+        <aside class="main-sidebar hidden-print">
+            <section class="sidebar">
+                <div class="user-panel">
+                    <div class="pull-left image"><img class="img-circle" src="@Url.Action("UserPhoto","Home")" alt="User Image"></div>
+                    <div class="pull-left info">
+                        <a href="~/Teachers/Details"><p> @init @user.lastName</p></a>
+                        <p class="designation">@role</p>
+                    </div>
+                </div>
+                <!-- Sidebar Menu-->
+                <ul class="sidebar-menu">
+                    <li><a href="~/Home/Index"><i class="fa fa-dashboard"></i><span>Dashboard</span></a></li>
+                    <li class="treeview">
+                        <a href="#"><i class="fa fa-laptop"></i><span>Data Management</span><i class="fa fa-angle-right"></i></a>
+                        <ul class="treeview-menu">
+                            <li><a href="~/Libraries/Create"><i class="fa fa-circle-o"></i>Add to Library</a></li>
+                            <li><a href="~/CASS/Index"><i class="fa fa-circle-o"></i>CASS</a></li>
+                        </ul>
+                    </li>
+                    <li class="treeview">
+                        <a href="#"><i class="fa fa-user-plus"></i><span>Users Management</span><i class="fa fa-angle-right"></i></a>
+                        <ul class="treeview-menu">
+                            <li><a href="~/Students/Activate"><i class="fa fa-circle-o"></i>Students</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="~/Libraries/Index"><i class="fa fa-institution"></i><span>Library</span></a></li>
+                    <li class="active"><a href="~/ClassTasks/Create"><i class="fa fa-file-text-o"></i><span>Post Task</span></a></li>
+                    <li><a href="~/ClassTasks/Index"><i class="fa fa-tasks"></i><span>Tasks</span></a></li>
+                    <li class="treeview">
+                        <a href="#"><i class="fa fa-th-list"></i><span>Tables</span><i class="fa fa-angle-right"></i></a>
+                        <ul class="treeview-menu">
+                            <li><a href="~/Students/Index"><i class="fa fa-circle-o"></i> Students</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </section>
+        </aside>
+        <div class="content-wrapper">
+            <div class="row user">
+                <div class="page-title">
+                    <div>
+                        <h1><i class="fa fa-paper-plane-o"></i>Home Work</h1>
+                    </div>
+                    <div>
+                        <ul class="breadcrumb">
+                            <li><i class="fa fa-home fa-lg"></i></li>
+                            <li><a href="#">Post Task</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card p-0">
+                        <ul class="nav nav-tabs nav-stacked user-tabs">
+                            <li class="active"><a href="#" data-toggle="tab">Post Task</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-9">
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="user-details">
+                            <div class="card user-settings">
+                                @using (Html.BeginForm("Create", "ClassTasks", FormMethod.Post, new { @class = "form-horizontal", enctype = "multipart/form-data", role = "form" }))
+                                {
+                                    <h3 class="line-head"><i class="fa fa-file-text-o"></i> Task</h3>
+                                    @Html.AntiForgeryToken()
+                                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                                    <div class="row mb-20">
+                                        <div class="col-md-4">
+                                            <label>Submitting Options</label>
+                                            <div>
+                                                <div class="radio-inline">
+                                                    <label>
+                                                        @Html.RadioButtonFor(model => model.submittingOption, "Hand In") Hand In
+                                                    </label>
+                                                </div>
+                                                <div class="radio-inline">
+                                                    <label>
+                                                        @Html.RadioButtonFor(model => model.submittingOption, "BlckBook") On BlckBook
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            @Html.ValidationMessageFor(model => model.submittingOption, "", new { @class = "text-danger" })
+                                        </div>
+
+                                        <div class="col-md-4">
+                                            <label>Class</label>
+                                            @if (TempData["classesNum"].ToString() == "1")
+                                            {
+                                                @Html.DropDownListFor(model => model.enrollId, ViewBag.streamlist as List<SelectListItem>, new { @class = "form-control" })
+                                            }
+                                            else
+                                            {
+                                                @Html.DropDownListFor(model => model.enrollId, ViewBag.streamlist as List<SelectListItem>, "--Choose Class--", new { @class = "form-control" })
+                                                @Html.ValidationMessageFor(model => model.enrollId, "", new { @class = "text-danger" })
+                                            }
+                                        </div>                                        
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-8 mb-20">
+                                            <label>Document</label>
+                                            <input class="form-control" type="file" name="@Html.NameFor(x => x.file)" id="@Html.IdFor(x=>x.file)" />
+                                            @Html.ValidationMessageFor(model => model.file, "", new { @class = "text-danger" })
+                                            @Html.EditorFor(model => model.heading, new { htmlAttributes = new { placeholder = "Header", @class = "form-control" } })
+                                            @Html.ValidationMessageFor(model => model.heading, "", new { @class = "text-danger" })
+                                            @Html.EditorFor(model => model.content, new { htmlAttributes = new { placeholder = "Content", @class = "form-control" } })
+                                            @Html.ValidationMessageFor(model => model.content, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-20">
+                                        <div class="col-md-4">
+                                            <label>Due Date</label>
+                                            @Html.EditorFor(model => model.dueDate, new { htmlAttributes = new { @class = "form-control" } })
+                                            @Html.ValidationMessageFor(model => model.dueDate, "", new { @class = "text-danger" })
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label>Time</label>
+                                            @Html.EditorFor(model => model.dueTime, new { htmlAttributes = new { @class = "form-control" } })
+                                            @Html.ValidationMessageFor(model => model.dueTime, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+
+                                    <div class="card-footer">
+                                        <div class="row">
+                                            <div class="col-md-8">
+                                                <input type="submit" class="btn btn-primary icon-btn" value="Post" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="~/js/jquery-2.1.4.min.js"></script>
+</body>
+</html>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

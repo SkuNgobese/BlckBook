@@ -1,0 +1,220 @@
+﻿@using The_Book.Models
+@using Microsoft.AspNet.Identity
+@using Microsoft.AspNet.Identity.EntityFramework;
+@{
+    string userId = User.Identity.GetUserId();
+    string role = "";
+    var init = "";
+    ApplicationDbContext context = new ApplicationDbContext();
+    var user = context.Users.Find(userId);
+    var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
+    var s = userManager.GetRoles(userId);
+    
+    if (s[0].ToString() == "Teacher")
+    {
+        role = "Teacher";
+    }
+    if (s[0].ToString() == "Student")
+    {
+        role = "Student";
+    }
+    if (s[0].ToString() != "Manager")
+    {
+        init = user.firstName.Substring(0, 1).ToUpper();
+        if (user.middleName != null)
+        {
+            init = user.firstName.Substring(0, 1).ToUpper() + user.middleName.Substring(0, 1).ToUpper();
+        }
+    }
+    if (s[0].ToString() == "Manager")
+    {
+        role = "Account Manager";
+        var mangs = user.Manager;
+        var space = mangs.school.name.IndexOf(" ");
+        init = mangs.school.name.Substring(0, 1).ToUpper() + mangs.school.name.Substring(1, space).ToLower();
+    }
+}
+<!DOCTYPE html>
+<html>
+<body class="sidebar-mini fixed">
+    <div class="wrapper">
+
+        <!-- Side-Nav-->
+        <aside class="main-sidebar hidden-print">
+            <section class="sidebar">
+                <div class="user-panel">
+                    <div class="pull-left image"><img class="img-circle" src="@Url.Action("UserPhoto","Home")" alt="User Image"></div>
+                    <div class="pull-left info">
+                        @if (s[0].ToString() == "Teacher")
+                        {
+                            <a href="~/Teachers/Details"><p> @init @user.lastName</p></a>
+                        }
+                        else if (s[0].ToString() == "Student")
+                        {
+                            <a href="~/Students/Details"><p> @init @user.lastName</p></a>
+                        }
+                        else
+                        {
+                            <p> @init</p>
+                        }
+                        <p class="designation">@role</p>
+                    </div>
+                </div>
+                <!-- Sidebar Menu-->
+                <ul class="sidebar-menu">
+                    <li><a href="~/Home/Index"><i class="fa fa-dashboard"></i><span>Dashboard</span></a></li>
+                    @if (s[0].ToString() == "Manager" || s[0].ToString() == "Teacher")
+                    {
+                        <li class="treeview">
+                            <a href="#"><i class="fa fa-laptop"></i><span>Data Management</span><i class="fa fa-angle-right"></i></a>
+                            <ul class="treeview-menu">
+                                @if (s[0].ToString() == "Manager")
+                                {
+                                    <li class="treeview">
+                                        <a href="#"><i class="fa fa-circle-o"></i><span> Add Classes</span><i class="fa fa-angle-right"></i></a>
+                                        <ul class="treeview-menu">
+                                            <li><a href="~/Subjects/Add"><i class="fa fa-circle-o"></i><span> Grade 8-9</span></a></li>
+                                            <li><a href="~/Streams/Create"><i class="fa fa-circle-o"></i> Grade 10-12</a></li>
+                                        </ul>
+                                    </li>                                    
+                                    <li><a href="~/Libraries/Create"><i class="fa fa-circle-o"></i>Add to Library</a></li>
+                                }
+                                @if (s[0].ToString() == "Teacher")
+                                {
+                                    <li><a href="~/Libraries/Create"><i class="fa fa-circle-o"></i>Add to Library</a></li>
+                                    <li><a href="~/CASS/Index"><i class="fa fa-circle-o"></i>CASS</a></li>
+                                }
+                            </ul>
+                        </li>
+                        <li class="treeview">
+                            <a href="#"><i class="fa fa-user-plus"></i><span>Users Management</span><i class="fa fa-angle-right"></i></a>
+                            <ul class="treeview-menu">
+                                @if (s[0].ToString() == "Manager")
+                                {
+                                    <li><a href="~/Teachers/Activate"><i class="fa fa-circle-o"></i>Teachers</a></li>
+                                    <li><a href="~/Parents/Create"><i class="fa fa-circle-o"></i>Add Parent</a></li>
+                                }
+                                @if (s[0].ToString() == "Teacher")
+                                {
+                                    <li><a href="~/Students/Activate"><i class="fa fa-circle-o"></i>Students</a></li>
+                                }
+                            </ul>
+                        </li>
+                    }
+                    @if (s[0].ToString() == "Admin")
+                    {
+                        <li class="treeview">
+                            <a href="#"><i class="fa fa-user-plus"></i><span>Users Management</span><i class="fa fa-angle-right"></i></a>
+                            <ul class="treeview-menu">
+                                <li><a href="~/Account/ManagerRegister"><i class="fa fa-circle-o"></i>Acount Managers</a></li>
+                            </ul>
+                        </li>
+                    }
+                    <li class="active"><a href="~/Libraries/Index"><i class="fa fa-institution"></i><span>Library</span></a></li>
+                    @if (s[0].ToString() == "Teacher")
+                    {
+                        <li><a href="~/ClassTasks/Create"><i class="fa fa-file-text-o"></i><span>Post Task</span></a></li>
+                    }
+                    @if (s[0].ToString() == "Manager")
+                    {
+                        <li><a href="~/SchoolEvents/Manage"><i class="fa fa-calendar-check-o"></i><span>Events</span></a></li>
+                    }
+                    @if (s[0].ToString() == "Student" || s[0].ToString() == "Teacher")
+                    {
+                        <li><a href="~/ClassTasks/Index"><i class="fa fa-tasks"></i><span>Tasks</span></a></li>
+                    }
+                    @if (s[0].ToString() == "Manager" || s[0].ToString() == "Teacher")
+                    {
+                        <li class="treeview">
+                            <a href="#"><i class="fa fa-th-list"></i><span>Tables</span><i class="fa fa-angle-right"></i></a>
+                            <ul class="treeview-menu">
+                                @if (s[0].ToString() == "Manager")
+                                {
+                                    <li><a href="~/Teachers/Index"><i class="fa fa-circle-o"></i> Teachers</a></li>
+                                    <li><a href="~/Students/Index"><i class="fa fa-circle-o"></i> Students</a></li>
+                                }
+                                @if (s[0].ToString() == "Teacher")
+                                {
+                                    <li><a href="~/Students/Index"><i class="fa fa-circle-o"></i> Students</a></li>
+                                }
+                            </ul>
+                        </li>
+                    }
+                    @if (s[0].ToString() == "Student")
+                    {
+                        <li><a href="~/CASS/Report"><i class="fa fa-th-list"></i><span>Cass Report</span></a></li>
+                    }
+                </ul>
+            </section>
+        </aside>
+        <div class="content-wrapper">
+            <div class="page-title">
+                <div>
+                    <div>
+                        <h1><i class="fa fa-leanpub"></i> Library</h1>
+                    </div>
+                    <ul class="breadcrumb side">
+                        <li><i class="fa fa-home fa-lg"></i></li>
+                        <li><a href="#">Library</a></li>
+                    </ul>
+                </div>
+                <div>
+                    @using (Html.BeginForm())
+                    {
+                        <label>Title/File Name</label> @Html.Editor("search")<input type="submit" value="Filter" class="btn btn-primary" /><abbr title="Refresh"><a class="btn btn-info btn-flat" href="~/Libraries/Index"><i class="fa fa-lg fa-refresh"></i></a></abbr>
+                    }
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div>
+                        @if (TempData["library"] != null)
+                        {
+                            <div class="panel panel-primary" style="width:500px; float: left; ">
+                                <div class="panel-heading" align="center">
+                                    <h2><b>Your Library</b></h2>
+                                </div>
+                                <div class="panel-body animate">
+                                    <div class="well">
+                                        @foreach (var item in (List<Library>)TempData["library"])
+                                        {
+                                            <h5><b>@item.title</b></h5> @item._date.ToString("dd MMMM yyyy");
+                                            <ul class="attachment">
+                                                <li>
+                                                    <a class="title" href="/Libraries/Download/?p=@(item.StudyMaterial.Id+item.StudyMaterial.FileName)&d=@item.StudyMaterial.FileName">@item.StudyMaterial.FileName</a>
+                                                </li>
+                                            </ul>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                        @if (TempData["recent"] != null)
+                        {
+                            <div class="panel panel-primary" style="width:500px; float: right; ">
+                                <div class="panel-heading" align="center">
+                                    <h2><b>Posted in @DateTime.Today.ToString("MMMM")</b></h2>
+                                </div>
+                                <div class="panel-body animate">
+                                    <div class="well">
+                                        @foreach (var item in (List<Library>)TempData["recent"])
+                                        {
+                                            <h5><b>@item.title</b></h5> @item._date.ToString("dd MMMM yyyy");
+                                            <ul class="attachment">
+                                                <li>
+                                                    <a class="title" href="/Libraries/Download/?p=@(item.StudyMaterial.Id+item.StudyMaterial.FileName)&d=@item.StudyMaterial.FileName">@item.StudyMaterial.FileName</a>
+                                                </li>
+                                            </ul>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="~/js/jquery-2.1.4.min.js"></script>
+</body>
+</html>

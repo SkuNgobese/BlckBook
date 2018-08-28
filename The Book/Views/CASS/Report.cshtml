@@ -1,0 +1,144 @@
+﻿@model The_Book.Models.Student
+@{
+    var init = Model.ApplicationUser.firstName.Substring(0, 1).ToUpper();
+    if (Model.ApplicationUser.middleName != null)
+    {
+        init = Model.ApplicationUser.firstName.Substring(0, 1).ToUpper() + Model.ApplicationUser.middleName.Substring(0, 1).ToUpper();
+    }
+    var role = "Student";
+}
+<!DOCTYPE html>
+<html>
+<body class="sidebar-mini fixed">
+    <div class="wrapper">
+        <aside class="main-sidebar hidden-print">
+            <section class="sidebar">
+                <div class="user-panel">
+                    <div class="pull-left image"><img class="img-circle" src="@Url.Action("UserPhoto","Home")" alt="User Image"></div>
+                    <div class="pull-left info">
+                        <a href="~/Students/Details"><p> @init @Model.ApplicationUser.lastName</p></a>
+                        <p class="designation">@role</p>
+                    </div>
+                </div>
+                <!-- Sidebar Menu-->
+                <ul class="sidebar-menu">
+                    <li><a href="~/Home/Index"><i class="fa fa-dashboard"></i><span>Dashboard</span></a></li>
+                    <li><a href="~/Libraries/Index"><i class="fa fa-institution"></i><span>Library</span></a></li>
+                    <li><a href="~/ClassTasks/Index"><i class="fa fa-tasks"></i><span>Tasks</span></a></li>
+                    <li class="active"><a href="~/CASS/Report"><i class="fa fa-th-list"></i><span>Cass Report</span></a></li>
+                </ul>
+            </section>
+        </aside>
+        <div class="content-wrapper">
+            <div class="row user">
+                <div class="page-title">
+                    <div>
+                        <h1><i class="fa fa-balance-scale"></i> Continuous Assessment (@DateTime.Now.Year)</h1>
+                    </div>
+                    <div>
+                        <ul class="breadcrumb">
+                            <li><i class="fa fa-home fa-lg"></i></li>
+                            <li><a href="#">Cass Report</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <table class="table table-striped" style="width:30%">
+                                    <tbody>
+                                        <tr>
+                                            @if (Model.studNo != null)
+                                            {
+                                                <td style="padding:0px">
+                                                    <label>Student No:</label> @Model.studNo
+                                                </td>
+                                            }
+                                            else
+                                            {
+                                                <td style="padding:0px">
+                                                    <label>ID No:</label> @Model.idNo
+                                                </td>
+                                            }
+                                        </tr>
+                                        <tr>
+                                            <td style="padding:0px">
+                                                <label>Name:</label> @Model.ApplicationUser.fullName
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding:0px">
+                                                <label>Class:</label> @Model.enrollment.grade@Model.enrollment.group
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding:0px">
+                                                <label>Stream:</label> @Model.enrollment.stream.name
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                @if (Model.enrollment.Assessments.Any())
+                                {
+                                    foreach (var s in Model.enrollment.EnrollmentSubjects)
+                                    {
+                                        var cass = 0.0;
+                                        var assessments = s.Assessments.ToList().FindAll(p => p.date.Year == DateTime.Today.Year);
+                                        <table class="table table-striped" style="width:10%" align="right">
+                                            <tbody>
+                                                <tr>
+                                                    @foreach (var i in assessments)
+                                                    {
+                                                        var assessmark = i.AssessmentMarks.ToList().Find(p => p.Student.Id == Model.Id);
+                                                        if (assessmark != null)
+                                                        {
+                                                            var mark = (assessmark.mark / i.totalMark * 100);
+                                                            cass += (i.cassContribution * mark / 100);
+                                                        }
+                                                    }
+                                                    <td style="padding:0px">
+                                                        <label>CASS:</label> @Math.Round(cass,MidpointRounding.AwayFromZero)/25%
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <table class="table table-bordered">
+                                            <tbody>
+                                                <tr>
+                                                    <td style="padding:0px">
+                                                        <label>@s.name</label>
+                                                    </td>
+                                                    @foreach (var i in assessments)
+                                                    {
+                                                        var assessmark = i.AssessmentMarks.ToList().Find(p => p.Student.Id == Model.Id);
+                                                        if (assessmark != null)
+                                                        {
+                                                            var mark = (assessmark.mark / i.totalMark * 100);
+
+                                                            <td style="padding:0px">
+                                                                @i.name (@i.cassContribution%): @assessmark.mark (@Math.Round(mark, MidpointRounding.AwayFromZero)%)
+                                                            </td>
+                                                        }
+                                                        else
+                                                        {
+                                                            <td style="padding:0px">
+                                                                @i.name (@i.cassContribution%): 0
+                                                            </td>
+                                                        }
+                                                    }
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    }
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="~/js/jquery-2.1.4.min.js"></script>
+</body>
+</html>

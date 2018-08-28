@@ -1,0 +1,92 @@
+﻿@using The_Book.Models
+@using Microsoft.AspNet.Identity
+@{
+    string userId = User.Identity.GetUserId();
+    ApplicationDbContext context = new ApplicationDbContext();
+    var user = context.Users.Find(userId);
+    var role = "Account Manager";
+    var mangs = user.Manager;
+    var space = mangs.school.name.IndexOf(" ");
+    var init = mangs.school.name.Substring(0, 1).ToUpper() + mangs.school.name.Substring(1, space).ToLower();
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="~/css/main.css">
+    <link href="~/Content/Site.css" rel="stylesheet" type="text/css" />
+</head>
+<body class="sidebar-mini fixed">
+    <div class="wrapper">
+        <!-- Side-Nav-->
+        <aside class="main-sidebar hidden-print">
+            <section class="sidebar">
+                <div class="user-panel">
+                    <div class="pull-left image"><img class="img-circle" src="@Url.Action("UserPhoto","Home")" alt="User Image"></div>
+                    <div class="pull-left info">
+                        <p> @init</p>
+                        <p class="designation">@role</p>
+                    </div>
+                </div>
+                <!-- Sidebar Menu-->
+                <ul class="sidebar-menu">
+                    <li><a href="~/Home/Index"><i class="fa fa-dashboard"></i><span>Dashboard</span></a></li>
+                    <li class="treeview">
+                        <a href="#"><i class="fa fa-laptop"></i><span>Data Management</span><i class="fa fa-angle-right"></i></a>
+                        <ul class="treeview-menu">
+                            <li class="treeview">
+                                <a href="#"><i class="fa fa-circle-o"></i><span> Add Classes</span><i class="fa fa-angle-right"></i></a>
+                                <ul class="treeview-menu">
+                                    <li><a href="~/Subjects/Add"><i class="fa fa-circle-o"></i><span> Grade 8-9</span></a></li>
+                                    <li><a href="~/Streams/Create"><i class="fa fa-circle-o"></i> Grade 10-12</a></li>
+                                </ul>
+                            </li>
+                            <li><a href="~/Libraries/Create"><i class="fa fa-circle-o"></i>Add to Library</a></li>
+                        </ul>
+                    </li>
+                    <li class="treeview">
+                        <a href="#"><i class="fa fa-user-plus"></i><span>Users Management</span><i class="fa fa-angle-right"></i></a>
+                        <ul class="treeview-menu">
+                            <li><a href="~/Teachers/Activate"><i class="fa fa-circle-o"></i>Teachers</a></li>
+                            <li><a href="~/Parents/Create"><i class="fa fa-circle-o"></i>Add Parent</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="~/Libraries/Index"><i class="fa fa-institution"></i><span>Library</span></a></li>
+                    <li class="active"><a href="~/SchoolEvents/Manage"><i class="fa fa-calendar-check-o"></i><span>Events</span></a></li>
+                    <li class="treeview">
+                        <a href="#"><i class="fa fa-th-list"></i><span>Tables</span><i class="fa fa-angle-right"></i></a>
+                        <ul class="treeview-menu">
+                            <li><a href="~/Teachers/Index"><i class="fa fa-circle-o"></i> Teachers</a></li>
+                            <li><a href="~/Students/Index"><i class="fa fa-circle-o"></i> Students</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </section>
+        </aside>
+        <div class="content-wrapper">
+            <div class="page-title">
+                <div>
+                    <h1><i class="fa fa-calendar"></i> Calendar</h1>
+                    <p>Calander for managing events</p>
+                </div>
+                <div>
+                    <ul class="breadcrumb">
+                        <li><i class="fa fa-home fa-lg"></i></li>
+                        <li><a href="#">Events</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card row">
+                        <div class="card-body">
+                            <div class="scheduler_container">
+                                @Html.Raw(Model.Render())
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

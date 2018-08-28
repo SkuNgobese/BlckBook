@@ -1,0 +1,124 @@
+﻿@model The_Book.Models.SAStudentViewModel
+@using The_Book.Models
+@using Microsoft.AspNet.Identity
+@{
+    string userId = User.Identity.GetUserId();
+    string role = "";
+    var init = "";
+    ApplicationDbContext context = new ApplicationDbContext();
+    var user = context.Users.Find(userId);
+    role = "Student";
+    init = user.firstName.Substring(0, 1).ToUpper();
+    if (user.middleName != null)
+    {
+        init = user.firstName.Substring(0, 1).ToUpper() + user.middleName.Substring(0, 1).ToUpper();
+    }
+}
+<!DOCTYPE html>
+<html>
+<body class="sidebar-mini fixed">
+    <div class="wrapper">
+        <aside class="main-sidebar hidden-print">
+            <section class="sidebar">
+                <div class="user-panel">
+                    <div class="pull-left image"><img class="img-circle" src="@Url.Action("UserPhoto","Home")" alt="User Image"></div>
+                    <div class="pull-left info">
+                        <a href="~/Students/Details"><p> @init @user.lastName</p></a>
+                        <p class="designation">@role</p>
+                    </div>
+                </div>
+                <ul class="sidebar-menu">
+                    <li><a href="~/Home/Index"><i class="fa fa-dashboard"></i><span>Dashboard</span></a></li>
+                    <li><a href="~/Libraries/Index"><i class="fa fa-institution"></i><span>Library</span></a></li>
+                    <li><a href="~/ClassTasks/Index"><i class="fa fa-tasks"></i><span>Tasks</span></a></li>
+                    <li><a href="~/CASS/Report"><i class="fa fa-th-list"></i><span>Cass Report</span></a></li>
+                </ul>
+            </section>
+        </aside>
+        <div class="content-wrapper">
+            <div class="row user">
+                <div class="col-md-12">
+                    <div class="profile">
+                        <div class="info">
+                            <img class="user-img" src="@Url.Action("UserPhoto","Home")">
+                        </div>
+                        <div class="cover-image"></div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card p-0">
+                        <ul class="nav nav-tabs nav-stacked user-tabs">
+                            <li class="disabled"><a href="#" data-toggle="tab">Timeline</a></li>
+                            <li class="active"><a href="#" data-toggle="tab">Details</a></li>
+                            <li class="disabled"><a href="#" data-toggle="tab">Address</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-9">
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="user-details">
+                            <div class="card user-settings">
+                                <h4 class="line-head">@user.fullName</h4>
+                                @using (Html.BeginForm("Student", "Classes", FormMethod.Post))
+                                {
+                                    @Html.AntiForgeryToken()
+                                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                                    <div class="row mb-20">
+                                        <div class="col-md-4">
+                                            <label>Student No.</label>
+                                            @Html.EditorFor(model => model.studNo, new { htmlAttributes = new { @class = "form-control" } })
+                                            @Html.ValidationMessageFor(model => model.studNo, "", new { @class = "text-danger" })
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label>ID No.</label>
+                                            @Html.EditorFor(model => model.idNo, new { htmlAttributes = new { @class = "form-control" } })
+                                            @Html.ValidationMessageFor(model => model.idNo, "", new { @class = "text-danger" })
+                                        </div>
+                                        <div class="clearfix"></div>
+                                    </div>
+                                    <div class="row mb-20">
+                                        <div class="col-md-4">
+                                            <label>Mobile No.</label>
+                                            @Html.EditorFor(model => model.contNo, new { htmlAttributes = new { placeholder = "e.g 0713456789", @class = "form-control" } })
+                                            @Html.ValidationMessageFor(model => model.contNo, "", new { @class = "text-danger" })
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label>Home Tel.</label>
+                                            @Html.EditorFor(model => model.homeTel, new { htmlAttributes = new { placeholder = "e.g 0113456789 / 0713456789", @class = "form-control" } })
+                                            @Html.ValidationMessageFor(model => model.homeTel, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    <div class="row mb-20">
+                                        <div class="col-md-4">
+                                            <label>Grade</label>
+                                            @Html.EditorFor(model => model.grade, new { htmlAttributes = new { @class = "form-control" } })
+                                            @Html.ValidationMessageFor(model => model.grade, "", new { @class = "text-danger" })                                        
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label>Group</label>
+                                            @Html.EditorFor(model => model.group, new { htmlAttributes = new { placeholder = "A, B or C etc..", @class = "form-control" } })
+                                            @Html.ValidationMessageFor(model => model.group, "", new { @class = "text-danger" })
+                                        </div>
+                                        <div class="clearfix"></div>
+                                    </div>
+                                    <div class="card-footer">
+                                        <div class="row">
+                                            <div class="col-md-8">
+                                                <input type="submit" class="btn btn-primary icon-btn" value="Submit" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="~/js/jquery-2.1.4.min.js"></script>
+</body>
+</html>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

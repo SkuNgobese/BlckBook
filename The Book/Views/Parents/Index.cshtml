@@ -1,0 +1,70 @@
+﻿@model IEnumerable<The_Book.Models.Parent>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.title)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.fName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.mName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.lName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.contactNo)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.workTel)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.emailAddress)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.title)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.fName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.mName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.lName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.contactNo)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.workTel)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.emailAddress)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
+            @Html.ActionLink("Details", "Details", new { id=item.Id }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.Id })
+        </td>
+    </tr>
+}
+
+</table>

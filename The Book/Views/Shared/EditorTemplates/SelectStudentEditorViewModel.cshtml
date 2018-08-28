@@ -1,0 +1,21 @@
+﻿@model The_Book.Models.SelectStudentEditorViewModel
+<tr>
+    <td style="text-align:left">
+        @Html.CheckBoxFor(model => model.Selected)
+    </td>
+    <td>
+        @Html.DisplayFor(model => model.Name)
+    </td>
+    <td>
+        @Html.DisplayFor(model => model.studNo)
+    </td>
+    <td>
+        @Html.DisplayFor(model => model.idNo)
+    </td>
+    <td style="text-align:center">
+        <div class="text-danger">
+            @Html.ActionLink("nfo", "infor", new { id = Model.Id }, new { @class = "btn btn-info icon-btn fa fa-info", @style = "padding:2px" }) |
+            @Html.HiddenFor(model => model.Id) Inactive
+        </div>
+    </td>
+</tr>

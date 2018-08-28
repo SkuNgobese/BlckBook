@@ -1,0 +1,133 @@
+﻿@model The_Book.Models.ManagerRegisterViewModel
+@{
+    string role = "Administrator";
+}
+<!DOCTYPE html>
+<html>
+<body class="sidebar-mini fixed">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+    <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+    <script type="text/javascript">
+    $(document).ready(function () {
+        $("#schoolname").autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: "/Account/GetSchools",
+                    minLength: 3,
+                    delay: 100,
+                    type: "POST",
+                    dataType: "json",
+                    data: { Prefix: request.term },
+                    success: function (data) {
+                        response($.map(data, function (item) {
+                            return { label: item.label, value: item.value };
+                        }))
+                    },
+                    error: function () {
+                        alert('something went wrong !');
+                    }
+                })
+            },
+            messages: {
+                noResults: "", results: ""
+            }
+        });
+    })
+    </script>
+    <div class="wrapper">
+        <aside class="main-sidebar hidden-print">
+            <section class="sidebar">
+                <div class="user-panel">
+                    <div class="pull-left image"><img class="img-circle" src="@Url.Action("UserPhoto","Home")" alt="User Image"></div>
+                    <div class="pull-left info">
+                        <p class="designation">@role</p>
+                    </div>
+                </div>
+                <!-- Sidebar Menu-->
+                <ul class="sidebar-menu">
+                    <li><a href="~/Home/Index"><i class="fa fa-dashboard"></i><span>Dashboard</span></a></li>
+                    <li class="treeview">
+                        <a href="#"><i class="fa fa-laptop"></i><span>Data Management</span><i class="fa fa-angle-right"></i></a>
+                        <ul class="treeview-menu">
+                            <li><a href="~/Schools/Create"><i class="fa fa-circle-o"></i>Add School</a></li>
+                        </ul>
+                    </li>
+                    <li class="treeview active">
+                        <a href="#"><i class="fa fa-user-plus"></i><span>Users Management</span><i class="fa fa-angle-right"></i></a>
+                        <ul class="treeview-menu">
+                            <li><a href="~/Account/ManagerRegister"><i class="fa fa-circle-o"></i>Acount Managers</a></li>
+                        </ul>
+                    </li> 
+                    <li class="treeview">
+                        <a href="#"><i class="fa fa-th-list"></i><span>Tables</span><i class="fa fa-angle-right"></i></a>
+                        <ul class="treeview-menu">
+                            <li><a href="~/Schools/Index"><i class="fa fa-circle-o"></i> Schools</a></li>
+                            <li><a href="~/Managers/Index"><i class="fa fa-circle-o"></i> Managers</a></li>
+                            <li><a href="~/Teachers/Index"><i class="fa fa-circle-o"></i> Teachers</a></li>
+                            <li><a href="~/Students/Index"><i class="fa fa-circle-o"></i> Students</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </section>
+        </aside>
+        <div class="content-wrapper">
+            <div class="row user">
+                <div class="page-title">
+                    <div>
+                        <h1><i class="fa fa-users"></i>Acount Manager</h1>
+                    </div>
+                    <div>
+                        <ul class="breadcrumb">
+                            <li><i class="fa fa-home fa-lg"></i></li>
+                            <li>Users Management</li>
+                            <li><a href="#">Acount Managers</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card p-0">
+                        <ul class="nav nav-tabs nav-stacked user-tabs">
+                            <li class="active"><a href="#" data-toggle="tab">Acount Manager</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-9">
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="user-details">
+                            <div class="card user-settings">
+                                @using (Html.BeginForm("ManagerRegister", "Account", FormMethod.Post, new { @class = "form-horizontal" }))
+                                {
+                                    <h3 class="line-head"><i class="fa fa-edit"></i> Register Acount Manager</h3>
+                                        
+                                    @Html.AntiForgeryToken()
+                                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                                    <div class="row mb-20">
+                                        <div class="col-md-8">
+                                            <label>School</label>
+                                            @Html.EditorFor(model => model.schoolname, new { htmlAttributes = new { @class = "form-control", @id = "schoolname" } })
+                                            @Html.ValidationMessageFor(model => model.schoolname, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    <div class="card-footer">
+                                        <div class="row">
+                                            <div class="col-md-8">
+                                                <input type="submit" class="btn btn-primary icon-btn" value="Register" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="~/js/jquery-2.1.4.min.js"></script>
+</body>
+</html>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

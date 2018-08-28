@@ -1,0 +1,9 @@
+﻿@model The_Book.Models.ViewModels.AssignedEnrollmentData
+@using The_Book.Models.ViewModels
+
+<fieldset>
+    @Html.HiddenFor(model => model.EnrollmentId)
+    @Html.CheckBoxFor(model => model.Assigned)
+    @Html.DisplayFor(model => model.grade)
+    @Html.DisplayFor(model => model.group)
+</fieldset>

@@ -1,0 +1,136 @@
+﻿@model The_Book.Models.School
+@{
+    string role = "Administrator";
+}
+<!DOCTYPE html>
+<html>
+<body class="sidebar-mini fixed">
+    <div class="wrapper">
+        <aside class="main-sidebar hidden-print">
+            <section class="sidebar">
+                <div class="user-panel">
+                    <div class="pull-left image"><img class="img-circle" src="@Url.Action("UserPhoto","Home")" alt="User Image"></div>
+                    <div class="pull-left info">
+                        <p class="designation">@role</p>
+                    </div>
+                </div>
+                <!-- Sidebar Menu-->
+                <ul class="sidebar-menu">
+                    <li><a href="~/Home/Index"><i class="fa fa-dashboard"></i><span>Dashboard</span></a></li>
+                    <li class="treeview">
+                        <a href="#"><i class="fa fa-laptop"></i><span>Data Management</span><i class="fa fa-angle-right"></i></a>
+                        <ul class="treeview-menu">
+                            <li><a href="~/Schools/Create"><i class="fa fa-circle-o"></i>Add School</a></li>
+                        </ul>
+                    </li>
+                    <li class="treeview">
+                        <a href="#"><i class="fa fa-user-plus"></i><span>Users Management</span><i class="fa fa-angle-right"></i></a>
+                        <ul class="treeview-menu">
+                            <li><a href="~/Account/ManagerRegister"><i class="fa fa-circle-o"></i>Acount Managers</a></li>
+                        </ul>
+                    </li>
+                    <li class="treeview active">
+                        <a href="#"><i class="fa fa-th-list"></i><span>Tables</span><i class="fa fa-angle-right"></i></a>
+                        <ul class="treeview-menu">
+                            <li><a href="~/Schools/Index"><i class="fa fa-circle-o"></i> Schools</a></li>
+                            <li><a href="~/Managers/Index"><i class="fa fa-circle-o"></i> Managers</a></li>
+                            <li><a href="~/Teachers/Index"><i class="fa fa-circle-o"></i> Teachers</a></li>
+                            <li><a href="~/Students/Index"><i class="fa fa-circle-o"></i> Students</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </section>
+        </aside>
+        <div class="content-wrapper">
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="panel panel-primary">
+                                <div class="panel-heading" align="center">
+                                    <h2>@Model.name.ToUpper()</h2>
+                                </div>
+                                <div class="panel-body" align="left">
+                                    <div class="well">
+                                        <dl class="dl-horizontal">
+
+                                            <dt>
+                                                @Html.DisplayNameFor(model => model.TelNo)
+                                            </dt>
+
+                                            <dd>
+                                                @Html.DisplayFor(model => model.TelNo)
+                                            </dd>
+
+                                            <dt>
+                                                @Html.DisplayNameFor(model => model.FaxNo)
+                                            </dt>
+
+                                            <dd>
+                                                @Html.DisplayFor(model => model.FaxNo)
+                                            </dd>
+
+                                            <dt>
+                                                @Html.DisplayNameFor(model => model.Email)
+                                            </dt>
+
+                                            <dd>
+                                                @Html.DisplayFor(model => model.Email)
+                                            </dd>
+
+                                            <dt>
+                                                @Html.DisplayNameFor(model => model.schoolAddress.province)
+                                            </dt>
+
+                                            <dd>
+                                                @Html.DisplayFor(model => model.schoolAddress.province)
+                                            </dd>
+                                            <dt>
+                                                @Html.DisplayName("School Address")
+                                            </dt>
+
+                                            <dd>
+                                                @Html.DisplayFor(model => model.schoolAddress.street)
+                                            </dd>
+                                            <dt>
+                                                @Html.DisplayName(" ")
+                                            </dt>
+
+                                            <dd>
+                                                @Html.DisplayFor(model => model.schoolAddress.suburb)
+                                            </dd>
+                                            <dt>
+                                                @Html.DisplayName(" ")
+                                            </dt>
+
+                                            <dd>
+                                                @Html.DisplayFor(model => model.schoolAddress.city)
+                                            </dd>
+                                            <dt>
+                                                @Html.DisplayName(" ")
+                                            </dt>
+
+                                            <dd>
+                                                @Html.DisplayFor(model => model.schoolAddress.code)
+                                            </dd>
+                                        </dl>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <a class="btn btn-default icon-btn" href="~/Schools/Index"><i class="fa fa-fw fa-lg fa-arrow-circle-o-left"></i>Back</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="~/js/jquery-2.1.4.min.js"></script>
+</body>
+</html>
