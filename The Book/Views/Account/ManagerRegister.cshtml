@@ -9,31 +9,31 @@
     <script src="//code.jquery.com/jquery-1.10.2.js"></script>
     <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
     <script type="text/javascript">
-    $(document).ready(function () {
-        $("#schoolname").autocomplete({
-            source: function (request, response) {
-                $.ajax({
-                    url: "/Account/GetSchools",
-                    minLength: 3,
-                    delay: 100,
-                    type: "POST",
-                    dataType: "json",
-                    data: { Prefix: request.term },
-                    success: function (data) {
-                        response($.map(data, function (item) {
-                            return { label: item.label, value: item.value };
-                        }))
-                    },
-                    error: function () {
-                        alert('something went wrong !');
-                    }
-                })
-            },
-            messages: {
-                noResults: "", results: ""
-            }
-        });
-    })
+        $(document).ready(function () {
+            $("#schoolname").autocomplete({
+                source: function (request, response) {
+                    $.ajax({
+                        url: "/Account/GetSchools",
+                        minLength: 3,
+                        delay: 100,
+                        type: "POST",
+                        dataType: "json",
+                        data: { Prefix: request.term },
+                        success: function (data) {
+                            response($.map(data, function (item) {
+                                return { label: item.label, value: item.value };
+                            }))
+                        },
+                        error: function () {
+                            alert('something went wrong!');
+                        }
+                    })
+                },
+                messages: {
+                    noResults: "", results: ""
+                }
+            });
+        })
     </script>
     <div class="wrapper">
         <aside class="main-sidebar hidden-print">
@@ -125,7 +125,7 @@
             </div>
         </div>
     </div>
-    <script src="~/js/jquery-2.1.4.min.js"></script>
+    @*<script src="~/js/jquery-2.1.4.min.js"></script>*@
 </body>
 </html>
 @section Scripts {
