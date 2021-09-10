@@ -23,7 +23,7 @@ namespace The_Book
             var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
             if(!roleManager.RoleExists("Admin"))
             {
-                var role = new Microsoft.AspNet.Identity.EntityFramework.IdentityRole();
+                var role = new IdentityRole();
                 role.Name = "Admin";
                 roleManager.Create(role);
 
