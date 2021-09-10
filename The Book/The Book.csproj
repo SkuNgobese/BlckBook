@@ -218,6 +218,10 @@
     <Compile Include="Migrations\201707211403228_initial.Designer.cs">
       <DependentUpon>201707211403228_initial.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202109101050212_fix.cs" />
+    <Compile Include="Migrations\202109101050212_fix.Designer.cs">
+      <DependentUpon>202109101050212_fix.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\DeactivatedStudent.cs" />
@@ -1106,6 +1110,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201707211403228_initial.resx">
       <DependentUpon>201707211403228_initial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202109101050212_fix.resx">
+      <DependentUpon>202109101050212_fix.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
